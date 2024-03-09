@@ -41,5 +41,5 @@ export class User {
     coursesDone: Course[]
 
     @ManyToMany(() => Lesson, (lesson) => lesson.usersDone)
-    lessonsDone: Course[]
+    lessonsDone: Lesson[]
 }
