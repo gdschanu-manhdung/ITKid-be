@@ -50,4 +50,21 @@ export class UsersService implements IUsersService {
             console.error(error)
         }
     }
+
+    async updateUser(userDetails: UserDetails) {
+        try {
+            const user = await this.findUserByEmail(userDetails)
+
+            const editedUser = {
+                ...user,
+                name: userDetails.name,
+                dob: userDetails.dob,
+                phone: userDetails.phone
+            }
+
+            return await this.userRepository.save(editedUser)
+        } catch (error) {
+            console.error(error)
+        }
+    }
 }

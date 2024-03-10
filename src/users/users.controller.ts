@@ -1,6 +1,15 @@
-import { Controller, HttpStatus, Inject, Post, Req, Res } from '@nestjs/common'
+import {
+    Controller,
+    HttpStatus,
+    Inject,
+    Post,
+    Put,
+    Req,
+    Res
+} from '@nestjs/common'
 import { Request, Response } from 'express'
 import { Routes, Services } from 'src/utils/constants'
+import { UserDetails } from 'src/utils/types'
 import { RegisterDto } from './dto/Register.dto'
 import { UsersService } from './users.service'
 
@@ -14,6 +23,15 @@ export class UsersController {
 
         return res.status(HttpStatus.OK).json({
             user: await this.usersService.createUser(registerDto)
+        })
+    }
+
+    @Put('updateUser')
+    async updateUser(@Req() req: Request, @Res() res: Response) {
+        const userDetails = req.body as UserDetails
+
+        return res.status(HttpStatus.OK).json({
+            user: await this.usersService.updateUser(userDetails)
         })
     }
 }
