@@ -2,11 +2,13 @@ import {
     Entity,
     PrimaryGeneratedColumn,
     Column,
-    OneToMany,
-    ManyToMany
+    ManyToMany,
+    OneToOne,
+    OneToMany
 } from 'typeorm'
 import { Course } from './Course'
 import { Lesson } from './Lesson'
+import { Recovery } from './Recovery'
 
 @Entity({ name: 'users' })
 export class User {
@@ -42,4 +44,7 @@ export class User {
 
     @ManyToMany(() => Lesson, (lesson) => lesson.usersDone)
     lessonsDone: Lesson[]
+
+    @OneToMany(() => Recovery, (recovery) => recovery.user)
+    recovery: Recovery
 }
