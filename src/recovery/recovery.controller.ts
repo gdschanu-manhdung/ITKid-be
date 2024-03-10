@@ -4,6 +4,7 @@ import { UserDetails } from 'src/utils/types'
 import { RecoveryService } from './recovery.service'
 import { Request, Response } from 'express'
 import { HttpStatus } from '@nestjs/common/enums'
+import { ConfirmRecoveryDto } from './dto/ConfirmRecovery.dto'
 
 @Controller(Routes.RECOVERY)
 export class RecoveryController {
@@ -17,6 +18,18 @@ export class RecoveryController {
 
         return res.status(HttpStatus.OK).json({
             message: await this.recoveryService.sendRecoveryMail(userDetails)
+        })
+    }
+
+    @Post('confirmRecovery')
+    async confirmRecovery(@Req() req: Request, @Res() res: Response) {
+        const confirmRecoveryDto = req.body as ConfirmRecoveryDto
+
+        return res.status(HttpStatus.OK).json({
+            message:
+                await this.recoveryService.confirmRecoveryCode(
+                    confirmRecoveryDto
+                )
         })
     }
 }

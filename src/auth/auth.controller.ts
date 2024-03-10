@@ -3,7 +3,7 @@ import { Inject } from '@nestjs/common/decorators/core'
 import { Request, Response } from 'express'
 import { Routes, Services } from 'src/utils/constants'
 import { AuthService } from './auth.service'
-import { LoginDto } from './dto/login.dto'
+import { LoginDto } from './dto/Login.dto'
 
 @Controller(Routes.AUTH)
 export class AuthController {
