@@ -1,20 +1,20 @@
 import { Controller, Post, Req, Res, HttpStatus } from '@nestjs/common'
 import { Inject } from '@nestjs/common/decorators/core'
 import { Request, Response } from 'express'
-import { UsersService } from 'src/users/users.service'
 import { Routes, Services } from 'src/utils/constants'
+import { AuthService } from './auth.service'
 import { LoginDto } from './dto/login.dto'
 
 @Controller(Routes.AUTH)
 export class AuthController {
-    constructor(@Inject(Services.USERS) private usersService: UsersService) {}
+    constructor(@Inject(Services.AUTH) private authService: AuthService) {}
 
     @Post('login')
     async login(@Req() req: Request, @Res() res: Response) {
         const loginDto = req.body as LoginDto
 
         return res.status(HttpStatus.OK).json({
-            user: await this.usersService.findUserByEmail(loginDto)
+            user: await this.authService.validateUser(loginDto)
         })
     }
 }
