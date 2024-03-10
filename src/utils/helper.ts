@@ -1,4 +1,5 @@
 import * as bcrypt from 'bcrypt'
+import { Like } from 'typeorm'
 
 export async function hashPassword(password: string) {
     const salt = await bcrypt.genSalt()
