@@ -18,6 +18,6 @@ export class Recovery {
     @Column()
     recoveryCode: string
 
-    @Column({ type: 'date' })
-    generatedTime: string
+    @Column({ type: 'bigint' })
+    generatedTime: number
 }

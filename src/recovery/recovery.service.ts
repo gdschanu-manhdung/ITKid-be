@@ -8,13 +8,17 @@ import { randomRecoveryCode } from 'src/utils/helper'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Recovery } from 'src/database/typeorm/entities/Recovery'
 import { Repository } from 'typeorm'
+import { ConfirmRecoveryDto } from './dto/ConfirmRecovery.dto'
+import { User } from 'src/database/typeorm/entities/User'
 
 export class RecoveryService implements IRecoveryService {
     constructor(
         @Inject(Services.USERS) private usersService: UsersService,
         private readonly mailerService: MailerService,
         @InjectRepository(Recovery)
-        private readonly recoveryRepository: Repository<Recovery>
+        private readonly recoveryRepository: Repository<Recovery>,
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>
     ) {}
 
     async sendRecoveryMail(userDetails: UserDetails) {
@@ -43,7 +47,7 @@ export class RecoveryService implements IRecoveryService {
                 const recovery = this.recoveryRepository.create({
                     user,
                     recoveryCode,
-                    generatedTime: new Date().toISOString()
+                    generatedTime: Math.floor(Date.now() / 1000)
                 })
 
                 await this.recoveryRepository.save(recovery)
@@ -51,12 +55,48 @@ export class RecoveryService implements IRecoveryService {
                 const recovery = {
                     ...existingRecovery,
                     recoveryCode,
-                    generatedTime: new Date().toISOString()
+                    generatedTime: Math.floor(Date.now() / 1000)
                 }
                 await this.recoveryRepository.save(recovery)
             }
 
             return 'Recovery code is sent!'
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async confirmRecoveryCode(confirmRecoveryDto: ConfirmRecoveryDto) {
+        try {
+            const user = await this.userRepository.findOne({
+                where: { email: confirmRecoveryDto.email }
+            })
+
+            if (!user) {
+                throw new HttpException('Wrong Email', HttpStatus.UNAUTHORIZED)
+            }
+
+            const recovery = await this.recoveryRepository.findOne({
+                where: { user }
+            })
+
+            if (!recovery) {
+                throw new HttpException(
+                    'Invalid recovery request',
+                    HttpStatus.NOT_FOUND
+                )
+            }
+
+            const now = Math.floor(Date.now() / 1000)
+            const isRecoveryValid =
+                now - Number(recovery.generatedTime) - 1200 <= 0 &&
+                confirmRecoveryDto.recoveryCode === recovery.recoveryCode
+
+            if (!isRecoveryValid) {
+                return 'Recovery account failed!'
+            }
+
+            return 'Recovery account successfully!'
         } catch (error) {
             console.error(error)
         }
