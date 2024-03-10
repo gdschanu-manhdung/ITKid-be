@@ -10,6 +10,7 @@ import {
 import { Request, Response } from 'express'
 import { Routes, Services } from 'src/utils/constants'
 import { UserDetails } from 'src/utils/types'
+import { ChangePasswordDto } from './dto/ChangePassword.dto'
 import { RegisterDto } from './dto/Register.dto'
 import { UsersService } from './users.service'
 
@@ -26,12 +27,21 @@ export class UsersController {
         })
     }
 
-    @Put('update')
-    async update(@Req() req: Request, @Res() res: Response) {
+    @Put('updateUser')
+    async updateUser(@Req() req: Request, @Res() res: Response) {
         const userDetails = req.body as UserDetails
 
         return res.status(HttpStatus.OK).json({
             user: await this.usersService.updateUser(userDetails)
+        })
+    }
+
+    @Put('changePassword')
+    async changePassword(@Req() req: Request, @Res() res: Response) {
+        const changePasswordDto = req.body as ChangePasswordDto
+
+        return res.status(HttpStatus.OK).json({
+            user: await this.usersService.changePassword(changePasswordDto)
         })
     }
 }

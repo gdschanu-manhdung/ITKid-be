@@ -5,7 +5,8 @@ import { Repository } from 'typeorm'
 import { IUsersService } from './users'
 import { HttpException, HttpStatus } from '@nestjs/common'
 import { RegisterDto } from './dto/Register.dto'
-import { hashPassword } from 'src/utils/helper'
+import { compareHash, hashPassword } from 'src/utils/helper'
+import { ChangePasswordDto } from './dto/ChangePassword.dto'
 
 export class UsersService implements IUsersService {
     constructor(
@@ -60,6 +61,35 @@ export class UsersService implements IUsersService {
                 name: userDetails.name,
                 dob: userDetails.dob,
                 phone: userDetails.phone
+            }
+
+            return await this.userRepository.save(editedUser)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async changePassword(changePasswordDto: ChangePasswordDto) {
+        try {
+            const user = await this.userRepository.findOne({
+                where: { email: changePasswordDto.email }
+            })
+
+            const isPasswordValid = await compareHash(
+                changePasswordDto.oldPassword,
+                user.password
+            )
+
+            if (!isPasswordValid) {
+                throw new HttpException(
+                    'Wrong old password',
+                    HttpStatus.UNAUTHORIZED
+                )
+            }
+
+            const editedUser = {
+                ...user,
+                password: await hashPassword(changePasswordDto.newPassword)
             }
 
             return await this.userRepository.save(editedUser)
