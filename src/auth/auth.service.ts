@@ -3,7 +3,7 @@ import { UsersService } from 'src/users/users.service'
 import { Services } from 'src/utils/constants'
 import { UserDetails } from 'src/utils/types'
 import { IAuthService } from './auth'
-import { LoginDto } from './dto/login.dto'
+import { LoginDto } from './dto/Login.dto'
 import { compareHash } from 'src/utils/helper'
 
 export class AuthService implements IAuthService {

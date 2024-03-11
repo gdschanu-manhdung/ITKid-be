@@ -9,3 +9,12 @@ export async function hashPassword(password: string) {
 export async function compareHash(rawPassword: string, hashedPassword: string) {
     return bcrypt.compare(rawPassword, hashedPassword)
 }
+
+export function randomRecoveryCode() {
+    let rand = ''
+    for (let i = 0; i < 8; i++) {
+        rand += Math.floor(Math.random() * 10)
+    }
+
+    return rand
+}
