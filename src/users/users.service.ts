@@ -7,6 +7,7 @@ import { HttpException, HttpStatus } from '@nestjs/common'
 import { RegisterDto } from './dto/Register.dto'
 import { compareHash, hashPassword } from 'src/utils/helper'
 import { ChangePasswordDto } from './dto/ChangePassword.dto'
+import { RecoveryPasswordDto } from './dto/RecoveryPassword.dto'
 
 export class UsersService implements IUsersService {
     constructor(
@@ -93,6 +94,23 @@ export class UsersService implements IUsersService {
             }
 
             return await this.userRepository.save(editedUser)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async recoveryPassword(recoveryPasswordDto: RecoveryPasswordDto) {
+        try {
+            const user = await this.userRepository.findOne({
+                where: { email: recoveryPasswordDto.email }
+            })
+
+            const recoveryUser = {
+                ...user,
+                password: await hashPassword(recoveryPasswordDto.password)
+            }
+
+            return await this.userRepository.save(recoveryUser)
         } catch (error) {
             console.error(error)
         }
