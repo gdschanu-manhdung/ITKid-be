@@ -29,3 +29,10 @@ export type CourseDetails = {
     category?: Category
     fee?: number
 }
+
+export type LessonDetails = {
+    id?: number
+    name?: string
+    description?: string
+    lesson?: Lesson
+}
