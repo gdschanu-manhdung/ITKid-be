@@ -7,6 +7,8 @@ import { UsersModule } from './users/users.module'
 import { MailerModule } from '@nestjs-modules/mailer'
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter'
 import { RecoveryModule } from './recovery/recovery.module'
+import { CategoriesModule } from './categories/categories.module'
+import { CoursesModule } from './courses/courses.module'
 
 @Module({
     imports: [
@@ -15,6 +17,8 @@ import { RecoveryModule } from './recovery/recovery.module'
         AuthModule,
         UsersModule,
         RecoveryModule,
+        CategoriesModule,
+        CoursesModule,
         TypeOrmModule.forRoot({
             type: 'postgres',
             url: process.env.DATABASE_URL,
