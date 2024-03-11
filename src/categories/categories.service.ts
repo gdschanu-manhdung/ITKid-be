@@ -21,7 +21,6 @@ export class CategoriesService implements ICategoriesService {
                 )
             }
 
-            console.log(allCategories)
             return allCategories
         } catch (error) {
             console.error(error)

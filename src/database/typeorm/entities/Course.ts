@@ -16,7 +16,7 @@ export class Course {
     id: number
 
     @Column()
-    name: number
+    name: string
 
     @Column()
     fee: number

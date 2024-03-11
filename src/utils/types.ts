@@ -1,3 +1,4 @@
+import { Category } from 'src/database/typeorm/entities/Category'
 import { Course } from 'src/database/typeorm/entities/Course'
 import { Lesson } from 'src/database/typeorm/entities/Lesson'
 
@@ -13,4 +14,18 @@ export type UserDetails = {
     coursesLearning?: Course[]
     coursesDone?: Course[]
     lessonsDone?: Lesson[]
+}
+
+export type CategoryDetails = {
+    id?: number
+    name?: string
+    courses?: Course[]
+}
+
+export type CourseDetails = {
+    id?: number
+    name?: string
+    image?: string
+    category?: Category
+    fee?: number
 }
