@@ -10,6 +10,7 @@ import { RecoveryModule } from './recovery/recovery.module'
 import { CategoriesModule } from './categories/categories.module'
 import { CoursesModule } from './courses/courses.module'
 import { LessonsModule } from './lessons/lessons.module'
+import { KnowledgesModule } from './knowledges/knowledge.module'
 
 @Module({
     imports: [
@@ -21,6 +22,7 @@ import { LessonsModule } from './lessons/lessons.module'
         CategoriesModule,
         CoursesModule,
         LessonsModule,
+        KnowledgesModule,
         TypeOrmModule.forRoot({
             type: 'postgres',
             url: process.env.DATABASE_URL,
