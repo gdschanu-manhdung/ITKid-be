@@ -45,6 +45,6 @@ export class User {
     @ManyToMany(() => Lesson, (lesson) => lesson.usersDone)
     lessonsDone: Lesson[]
 
-    @OneToMany(() => Recovery, (recovery) => recovery.user)
+    @OneToMany(() => Recovery, (recovery) => recovery.user, { cascade: true })
     recovery: Recovery
 }

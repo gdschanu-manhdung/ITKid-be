@@ -11,6 +11,7 @@ import { CategoriesModule } from './categories/categories.module'
 import { CoursesModule } from './courses/courses.module'
 import { LessonsModule } from './lessons/lessons.module'
 import { KnowledgesModule } from './knowledges/knowledge.module'
+import { QuizlessonsModule } from './quizlessons/quizlessons.module'
 
 @Module({
     imports: [
@@ -23,6 +24,7 @@ import { KnowledgesModule } from './knowledges/knowledge.module'
         CoursesModule,
         LessonsModule,
         KnowledgesModule,
+        QuizlessonsModule,
         TypeOrmModule.forRoot({
             type: 'postgres',
             url: process.env.DATABASE_URL,

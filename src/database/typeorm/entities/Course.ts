@@ -24,15 +24,15 @@ export class Course {
     @Column()
     image: string
 
-    @ManyToMany(() => User, (user) => user.coursesLearning)
+    @ManyToMany(() => User, (user) => user.coursesLearning, { cascade: true })
     usersLearning: User[]
 
-    @ManyToMany(() => User, (user) => user.coursesDone)
+    @ManyToMany(() => User, (user) => user.coursesDone, { cascade: true })
     usersDone: User[]
 
     @ManyToOne(() => Category, (category) => category.courses)
     category: Category
 
-    @OneToMany(() => Lesson, (lesson) => lesson.course)
+    @OneToMany(() => Lesson, (lesson) => lesson.course, { cascade: true })
     lessons: Lesson[]
 }
