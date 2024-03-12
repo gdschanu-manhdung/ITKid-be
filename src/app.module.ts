@@ -9,6 +9,9 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { RecoveryModule } from './recovery/recovery.module'
 import { CategoriesModule } from './categories/categories.module'
 import { CoursesModule } from './courses/courses.module'
+import { LessonsModule } from './lessons/lessons.module'
+import { KnowledgesModule } from './knowledges/knowledge.module'
+import { QuizlessonsModule } from './quizlessons/quizlessons.module'
 
 @Module({
     imports: [
@@ -19,6 +22,9 @@ import { CoursesModule } from './courses/courses.module'
         RecoveryModule,
         CategoriesModule,
         CoursesModule,
+        LessonsModule,
+        KnowledgesModule,
+        QuizlessonsModule,
         TypeOrmModule.forRoot({
             type: 'postgres',
             url: process.env.DATABASE_URL,

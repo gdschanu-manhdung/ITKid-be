@@ -9,7 +9,7 @@ import {
 } from 'typeorm'
 import { Course } from './Course'
 import { Knowledge } from './Knowledge'
-import { Quizfour } from './Quizfour'
+import { Quizlesson } from './Quizlesson'
 import { User } from './User'
 
 @Entity({ name: 'lessons' })
@@ -29,6 +29,8 @@ export class Lesson {
     @OneToMany(() => Knowledge, (knowledge) => knowledge.lesson)
     knowledges: Knowledge[]
 
-    @OneToOne(() => Quizfour, (quizfour) => quizfour.lesson)
-    quizfour: Quizfour
+    @OneToOne(() => Quizlesson, (quizfour) => quizfour.lesson, {
+        cascade: true
+    })
+    quizlesson: Quizlesson
 }

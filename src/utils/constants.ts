@@ -3,7 +3,10 @@ export enum Services {
     AUTH = 'AUTH_SERVICE',
     RECOVERY = 'RECOVERY_SERVICE',
     CATEGORIES = 'CATEGORIES_SERVICE',
-    COURSES = 'COURSES_SERVICE'
+    COURSES = 'COURSES_SERVICE',
+    LESSONS = 'LESSONS_SERVICE',
+    KNOWLEDGES = 'KNOWLEDGES_SERVICE',
+    QUIZLESSONS = 'QUIZLESSONS_SERVICE'
 }
 
 export enum Routes {
@@ -11,5 +14,8 @@ export enum Routes {
     AUTH = 'auth',
     RECOVERY = 'recovery',
     CATEGORIES = 'categories',
-    COURSES = 'courses'
+    COURSES = 'courses',
+    LESSONS = 'lessons',
+    KNOWLEDGES = 'knowledges',
+    QUIZLESSONS = 'quizlessons'
 }

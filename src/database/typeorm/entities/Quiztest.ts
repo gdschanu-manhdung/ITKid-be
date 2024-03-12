@@ -8,8 +8,8 @@ import {
 import { Lesson } from './Lesson'
 import { Test } from './Test'
 
-@Entity({ name: 'quizfours' })
-export class Quizfour {
+@Entity({ name: 'quiztests' })
+export class Quiztest {
     @PrimaryGeneratedColumn()
     id: number
 
@@ -31,9 +31,6 @@ export class Quizfour {
     @Column()
     true_answer: number
 
-    @OneToOne(() => Lesson, (lesson) => lesson.quizfour)
-    lesson: Lesson
-
-    @ManyToOne(() => Test, (test) => test.quizzesfour)
+    @ManyToOne(() => Test, (test) => test.quiztests)
     test: Test
 }

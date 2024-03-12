@@ -1,11 +1,11 @@
 import { Column, PrimaryGeneratedColumn, Entity, OneToMany } from 'typeorm'
-import { Quizfour } from './Quizfour'
+import { Quiztest } from './Quiztest'
 
 @Entity({ name: 'tests' })
 export class Test {
     @PrimaryGeneratedColumn()
     id: number
 
-    @OneToMany(() => Quizfour, (quizfour) => quizfour.test)
-    quizzesfour: Quizfour[]
+    @OneToMany(() => Quiztest, (quiztest) => quiztest.test, { cascade: true })
+    quiztests: Quiztest[]
 }

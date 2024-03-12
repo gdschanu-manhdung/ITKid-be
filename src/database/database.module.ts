@@ -5,7 +5,8 @@ import { Category } from './typeorm/entities/Category'
 import { Course } from './typeorm/entities/Course'
 import { Knowledge } from './typeorm/entities/Knowledge'
 import { Lesson } from './typeorm/entities/Lesson'
-import { Quizfour } from './typeorm/entities/Quizfour'
+import { Quizlesson } from './typeorm/entities/Quizlesson'
+import { Quiztest } from './typeorm/entities/Quiztest'
 import { Quiztwo } from './typeorm/entities/Quiztwo'
 import { Test } from './typeorm/entities/Test'
 import { User } from './typeorm/entities/User'
@@ -25,7 +26,8 @@ import { User } from './typeorm/entities/User'
                     Knowledge,
                     Lesson,
                     Quiztwo,
-                    Quizfour,
+                    Quizlesson,
+                    Quiztest,
                     Test,
                     User
                 ],
