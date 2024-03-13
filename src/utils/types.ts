@@ -2,6 +2,7 @@ import { Category } from 'src/database/typeorm/entities/Category'
 import { Course } from 'src/database/typeorm/entities/Course'
 import { Lesson } from 'src/database/typeorm/entities/Lesson'
 import { Quiztest } from 'src/database/typeorm/entities/Quiztest'
+import { Test } from 'src/database/typeorm/entities/Test'
 
 export type UserDetails = {
     id?: number
@@ -54,4 +55,15 @@ export type TestDetails = {
     name?: string
     quiztests?: Quiztest[]
     course?: Course
+}
+
+export type QuiztestDetails = {
+    id?: number
+    question?: string
+    answer_1?: string
+    answer_2?: string
+    answer_3?: string
+    answer_4?: string
+    true_answer?: number
+    test?: Test
 }

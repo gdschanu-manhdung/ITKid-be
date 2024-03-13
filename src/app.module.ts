@@ -13,6 +13,7 @@ import { LessonsModule } from './lessons/lessons.module'
 import { KnowledgesModule } from './knowledges/knowledge.module'
 import { QuizlessonsModule } from './quizlessons/quizlessons.module'
 import { TestsModule } from './tests/tests.module'
+import { QuiztestsModule } from './quiztests/quiztests.module'
 
 @Module({
     imports: [
@@ -27,6 +28,7 @@ import { TestsModule } from './tests/tests.module'
         KnowledgesModule,
         QuizlessonsModule,
         TestsModule,
+        QuiztestsModule,
         TypeOrmModule.forRoot({
             type: 'postgres',
             url: process.env.DATABASE_URL,

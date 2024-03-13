@@ -50,8 +50,6 @@ export class TestsService implements ITestsService {
                 where: { course }
             })
 
-            console.log(course, test)
-
             return test
         } catch (error) {}
     }

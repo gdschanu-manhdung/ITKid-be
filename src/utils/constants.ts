@@ -7,7 +7,8 @@ export enum Services {
     LESSONS = 'LESSONS_SERVICE',
     KNOWLEDGES = 'KNOWLEDGES_SERVICE',
     QUIZLESSONS = 'QUIZLESSONS_SERVICE',
-    TESTS = 'TESTS_SERVICE'
+    TESTS = 'TESTS_SERVICE',
+    QUIZTESTS = 'QUIZTESTS_SERVICE'
 }
 
 export enum Routes {
@@ -19,5 +20,6 @@ export enum Routes {
     LESSONS = 'lessons',
     KNOWLEDGES = 'knowledges',
     QUIZLESSONS = 'quizlessons',
-    TESTS = 'tests'
+    TESTS = 'tests',
+    QUIZTESTS = 'quiztests'
 }
