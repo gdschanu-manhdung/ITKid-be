@@ -67,3 +67,11 @@ export type QuiztestDetails = {
     true_answer?: number
     test?: Test
 }
+
+export type QuiztwoDetails = {
+    id?: number
+    question?: string
+    answer_1?: string
+    answer_2?: string
+    true_answer?: number
+}
