@@ -26,10 +26,6 @@ export class QuizlessonsService implements IQuizlessonsService {
                 throw new HttpException('Wrong lesson', HttpStatus.NOT_FOUND)
             }
 
-            // if (lesson.quizlesson) {
-            //     throw new HttpException('Existing quiz', HttpStatus.FORBIDDEN)
-            // }
-
             const {
                 question,
                 answer_1,
@@ -69,13 +65,9 @@ export class QuizlessonsService implements IQuizlessonsService {
                 throw new HttpException('Wrong lesson', HttpStatus.NOT_FOUND)
             }
 
-            console.log(2)
-
             const quizlesson = await this.quizlessonRepository.findOne({
                 where: { lesson }
             })
-
-            console.log(1)
 
             return quizlesson
         } catch (error) {
