@@ -4,10 +4,12 @@ import {
     Column,
     ManyToMany,
     ManyToOne,
-    OneToMany
+    OneToMany,
+    OneToOne
 } from 'typeorm'
 import { Category } from './Category'
 import { Lesson } from './Lesson'
+import { Test } from './Test'
 import { User } from './User'
 
 @Entity({ name: 'courses' })
@@ -35,4 +37,7 @@ export class Course {
 
     @OneToMany(() => Lesson, (lesson) => lesson.course, { cascade: true })
     lessons: Lesson[]
+
+    @OneToOne(() => Test, (test) => test.course, { cascade: true })
+    test: Test
 }
