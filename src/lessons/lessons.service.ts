@@ -90,6 +90,19 @@ export class LessonsService implements ILessonsService {
         try {
             const lesson = await this.lessonRepository.findOne({
                 where: { id: lessonDetails.id }
+            })
+
+            if (!lesson) {
+                throw new HttpException('Wrong lesson', HttpStatus.NOT_FOUND)
+            }
+
+            await this.lessonRepository.delete(lesson)
+
+            return 'Delete successfully'
+        } catch (error) {
+            console.error(error)
+        }
+    }
     async doneLesson(doneLessonDto: DoneLessonDto) {
         try {
             const user = await this.userRepository.findOne({
@@ -104,13 +117,6 @@ export class LessonsService implements ILessonsService {
                 where: { id: doneLessonDto.lessonId }
             })
 
-            if (!lesson) {
-                throw new HttpException('Wrong lesson', HttpStatus.NOT_FOUND)
-            }
-
-            await this.lessonRepository.delete(lesson)
-
-            return 'Delete successfully'
             const lessonsDone = user.lessonsDone
                 ? [...user.lessonsDone, lesson]
                 : [lesson]
