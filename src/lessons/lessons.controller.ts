@@ -5,14 +5,17 @@ import {
     Req,
     Res,
     Get,
-    Post
+    Post,
+    Put,
+    Delete
 } from '@nestjs/common'
 import { Routes, Services } from 'src/utils/constants'
-import { CourseDetails } from 'src/utils/types'
+import { CourseDetails, LessonDetails } from 'src/utils/types'
 import { LessonsService } from './lessons.service'
 import { Request, Response } from 'express'
 import { AddLessonDto } from './dto/AddLesson.dto'
 import { ApiBody, ApiQuery } from '@nestjs/swagger'
+import { EditLessonDto } from './dto/EditLesson.dto'
 import { DoneLessonDto } from './dto/DoneLesson.dto'
 
 @Controller(Routes.LESSONS)
@@ -38,6 +41,26 @@ export class LessonsController {
 
         return res.status(HttpStatus.OK).json({
             lesson: await this.lessonsService.addLesson(addLessonDto)
+        })
+    }
+
+    @ApiBody({ type: EditLessonDto })
+    @Put('editLesson')
+    async editLesson(@Req() req: Request, @Res() res: Response) {
+        const lessonDetails = req.body as LessonDetails
+
+        return res.status(HttpStatus.OK).json({
+            course: await this.lessonsService.editLesson(lessonDetails)
+        })
+    }
+
+    @ApiQuery({ name: 'id', required: true, type: Number })
+    @Delete('deleteCourse')
+    async deleteCourse(@Req() req: Request, @Res() res: Response) {
+        const lessonDetails = req.body as LessonDetails
+
+        return res.status(HttpStatus.OK).json({
+            message: await this.lessonsService.deleteLesson(lessonDetails)
         })
     }
 
