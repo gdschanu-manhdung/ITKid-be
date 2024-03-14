@@ -8,4 +8,6 @@ export interface ICoursesService {
     addCourse(addCourseDto: AddCourseDto): Promise<Course>
     payCourse(paycourseDto: PayCourseDto): Promise<string>
     doneCourse(paycourseDto: PayCourseDto): Promise<string>
+    editCourse(courseDetails: CourseDetails): Promise<Course>
+    deleteCourse(courseDetails: CourseDetails): Promise<string>
 }

@@ -4,7 +4,7 @@ import { Repository } from 'typeorm'
 import { ICoursesService } from './courses'
 import { HttpException, HttpStatus } from '@nestjs/common'
 import { Course } from 'src/database/typeorm/entities/Course'
-import { CategoryDetails } from 'src/utils/types'
+import { CategoryDetails, CourseDetails } from 'src/utils/types'
 import { AddCourseDto } from './dto/AddCourse.dto'
 import { PayCourseDto } from './dto/PayCourse.dto'
 import { User } from 'src/database/typeorm/entities/User'
@@ -141,6 +141,49 @@ export class CoursesService implements ICoursesService {
             } else {
                 throw new HttpException('Invalid Course', HttpStatus.NOT_FOUND)
             }
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async editCourse(courseDetails: CourseDetails) {
+        try {
+            const course = await this.courseRepository.findOne({
+                where: { id: courseDetails.id }
+            })
+
+            if (!course) {
+                throw new HttpException('Wrong course', HttpStatus.NOT_FOUND)
+            }
+
+            const { name, image, fee } = courseDetails
+
+            const editedCourse = {
+                ...course,
+                name,
+                image,
+                fee
+            }
+
+            return await this.categoryRepository.save(editedCourse)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async deleteCourse(courseDetails: CourseDetails) {
+        try {
+            const course = await this.courseRepository.findOne({
+                where: { id: courseDetails.id }
+            })
+
+            if (!course) {
+                throw new HttpException('Wrong course', HttpStatus.NOT_FOUND)
+            }
+
+            await this.courseRepository.delete(course)
+
+            return 'Delete successfully'
         } catch (error) {
             console.error(error)
         }
