@@ -7,4 +7,5 @@ export interface ICoursesService {
     getCoursesByCategory(categoryDetails: CategoryDetails): Promise<Course[]>
     addCourse(addCourseDto: AddCourseDto): Promise<Course>
     payCourse(paycourseDto: PayCourseDto): Promise<string>
+    doneCourse(paycourseDto: PayCourseDto): Promise<string>
 }
