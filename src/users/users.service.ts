@@ -1,6 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm'
 import { User } from 'src/database/typeorm/entities/User'
-import { UserDetails } from 'src/utils/types'
+import { FundInDetails, UserDetails } from 'src/utils/types'
 import { Repository } from 'typeorm'
 import { IUsersService } from './users'
 import { HttpException, HttpStatus } from '@nestjs/common'
@@ -8,11 +8,16 @@ import { RegisterDto } from './dto/Register.dto'
 import { compareHash, hashPassword } from 'src/utils/helper'
 import { ChangePasswordDto } from './dto/ChangePassword.dto'
 import { RecoveryPasswordDto } from './dto/RecoveryPassword.dto'
+import { FundInDto } from './dto/FundIn.dto'
+import { History } from 'src/database/typeorm/entities/History'
+import { FundInEnum } from 'src/utils/constants'
 
 export class UsersService implements IUsersService {
     constructor(
         @InjectRepository(User)
-        private readonly userRepository: Repository<User>
+        private readonly userRepository: Repository<User>,
+        @InjectRepository(History)
+        private readonly historyRepository: Repository<History>
     ) {}
 
     async findUserByEmail(userDetails: UserDetails) {
@@ -111,6 +116,87 @@ export class UsersService implements IUsersService {
             }
 
             return await this.userRepository.save(recoveryUser)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async fundIn(fundInDto: FundInDto) {
+        try {
+            const user = await this.userRepository.findOne({
+                where: { email: fundInDto.email }
+            })
+
+            if (!user) {
+                throw new HttpException('Wrong user', HttpStatus.UNAUTHORIZED)
+            }
+
+            if (fundInDto.amount <= 0) {
+                throw new HttpException(
+                    'Invalid amount',
+                    HttpStatus.NOT_ACCEPTABLE
+                )
+            }
+
+            const fundInDetails = {
+                ...fundInDto,
+                status: FundInEnum.PENDING
+            }
+            const fund = this.historyRepository.create(fundInDetails)
+            return await this.historyRepository.save(fund)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async handlefundIn(fundInDetails: FundInDetails) {
+        try {
+            if (!fundInDetails.id) {
+                throw new HttpException('Wrong index', HttpStatus.BAD_REQUEST)
+            }
+
+            const fundRequest = await this.historyRepository.findOne({
+                where: { id: fundInDetails.id }
+            })
+
+            if (!fundRequest) {
+                throw new HttpException('Invalid request', HttpStatus.NOT_FOUND)
+            }
+
+            const user = await this.userRepository.findOne({
+                where: { email: fundRequest.email }
+            })
+
+            if (!user) {
+                const fund = {
+                    ...fundRequest,
+                    status: FundInEnum.FAILED
+                }
+
+                return await this.historyRepository.save(fund)
+            } else {
+                const fund = {
+                    ...fundRequest,
+                    status: FundInEnum.SUCCESS
+                }
+
+                const updatedUser = {
+                    ...user,
+                    wallet: user.wallet + fund.amount / 100
+                }
+                await this.userRepository.save(updatedUser)
+                return await this.historyRepository.save(fund)
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async getFundInRequests() {
+        try {
+            const requests = await this.historyRepository.find()
+
+            return requests
         } catch (error) {
             console.error(error)
         }

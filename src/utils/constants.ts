@@ -25,3 +25,9 @@ export enum Routes {
     QUIZTESTS = 'quiztests',
     QUIZTWOS = 'quiztwos'
 }
+
+export enum FundInEnum {
+    PENDING = 'PENDING',
+    FAILED = 'FAILED',
+    SUCCESS = 'SUCCESS'
+}
