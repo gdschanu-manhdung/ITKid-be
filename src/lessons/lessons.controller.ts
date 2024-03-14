@@ -18,7 +18,6 @@ import { ApiBody, ApiQuery } from '@nestjs/swagger'
 import { EditLessonDto } from './dto/EditLesson.dto'
 import { DoneLessonDto } from './dto/DoneLesson.dto'
 
-
 @Controller(Routes.LESSONS)
 export class LessonsController {
     constructor(
@@ -62,6 +61,8 @@ export class LessonsController {
 
         return res.status(HttpStatus.OK).json({
             message: await this.lessonsService.deleteLesson(lessonDetails)
+        })
+    }
 
     @ApiBody({ type: DoneLessonDto })
     @Post('doneCourse')
