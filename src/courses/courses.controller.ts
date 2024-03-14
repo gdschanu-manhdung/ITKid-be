@@ -51,4 +51,14 @@ export class CoursesController {
             message: await this.coursesService.payCourse(paycourseDto)
         })
     }
+
+    @ApiBody({ type: PayCourseDto })
+    @Post('doneCourse')
+    async doneCourse(@Req() req: Request, @Res() res: Response) {
+        const paycourseDto = req.body as PayCourseDto
+
+        return res.status(HttpStatus.OK).json({
+            message: await this.coursesService.doneCourse(paycourseDto)
+        })
+    }
 }
