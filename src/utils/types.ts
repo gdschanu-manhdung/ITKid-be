@@ -75,3 +75,10 @@ export type QuiztwoDetails = {
     answer_2?: string
     true_answer?: number
 }
+
+export type FundInDetails = {
+    id?: number
+    email?: string
+    amount?: string
+    status?: string
+}

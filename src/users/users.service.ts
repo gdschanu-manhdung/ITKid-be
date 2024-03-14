@@ -1,6 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm'
 import { User } from 'src/database/typeorm/entities/User'
-import { UserDetails } from 'src/utils/types'
+import { FundInDetails, UserDetails } from 'src/utils/types'
 import { Repository } from 'typeorm'
 import { IUsersService } from './users'
 import { HttpException, HttpStatus } from '@nestjs/common'
@@ -144,6 +144,49 @@ export class UsersService implements IUsersService {
             }
             const fund = this.historyRepository.create(fundInDetails)
             return await this.historyRepository.save(fund)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async handlefundIn(fundInDetails: FundInDetails) {
+        try {
+            if (!fundInDetails.id) {
+                throw new HttpException('Wrong index', HttpStatus.BAD_REQUEST)
+            }
+
+            const fundRequest = await this.historyRepository.findOne({
+                where: { id: fundInDetails.id }
+            })
+
+            if (!fundRequest) {
+                throw new HttpException('Invalid request', HttpStatus.NOT_FOUND)
+            }
+
+            const user = await this.userRepository.findOne({
+                where: { email: fundRequest.email }
+            })
+
+            if (!user) {
+                const fund = {
+                    ...fundRequest,
+                    status: FundInEnum.FAILED
+                }
+
+                return await this.historyRepository.save(fund)
+            } else {
+                const fund = {
+                    ...fundRequest,
+                    status: FundInEnum.SUCCESS
+                }
+
+                const updatedUser = {
+                    ...user,
+                    wallet: user.wallet + fund.amount / 100
+                }
+                await this.userRepository.save(updatedUser)
+                return await this.historyRepository.save(fund)
+            }
         } catch (error) {
             console.error(error)
         }

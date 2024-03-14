@@ -7,10 +7,10 @@ import {
     Req,
     Res
 } from '@nestjs/common'
-import { ApiBody } from '@nestjs/swagger'
+import { ApiBody, ApiQuery } from '@nestjs/swagger'
 import { Request, Response } from 'express'
 import { Routes, Services } from 'src/utils/constants'
-import { UserDetails } from 'src/utils/types'
+import { FundInDetails, UserDetails } from 'src/utils/types'
 import { ChangePasswordDto } from './dto/ChangePassword.dto'
 import { FundInDto } from './dto/FundIn.dto'
 import { RecoveryPasswordDto } from './dto/RecoveryPassword.dto'
@@ -69,6 +69,16 @@ export class UsersController {
 
         return res.status(HttpStatus.OK).json({
             request: await this.usersService.fundIn(fundInDto)
+        })
+    }
+
+    @ApiQuery({ name: 'id', required: true, type: Number })
+    @Post('handleFundIn')
+    async handleFundIn(@Req() req: Request, @Res() res: Response) {
+        const fundInDetails = req.body as FundInDetails
+
+        return res.status(HttpStatus.OK).json({
+            request: await this.usersService.handlefundIn(fundInDetails)
         })
     }
 }
