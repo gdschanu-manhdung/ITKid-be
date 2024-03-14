@@ -89,4 +89,14 @@ export class UsersController {
             requests: await this.usersService.getFundInRequests()
         })
     }
+
+    @ApiQuery({ name: 'id', required: true, type: Number })
+    @Post('increasePoint')
+    async increasePoint(@Req() req: Request, @Res() res: Response) {
+        const userDetails = req.body as UserDetails
+
+        return res.status(HttpStatus.OK).json({
+            request: await this.usersService.increasePoint(userDetails)
+        })
+    }
 }
