@@ -14,4 +14,7 @@ export interface IUsersService {
     fundIn(fundInDto: FundInDto): Promise<FundInDto>
     handlefundIn(fundInDetails: FundInDetails): Promise<FundInDto>
     getFundInRequests(): Promise<History[]>
+    increasePoint(userDetails: UserDetails): Promise<User>
+    getUserRankings(userDetails: UserDetails): Promise<number>
+    getFullRankings(): Promise<User[]>
 }
