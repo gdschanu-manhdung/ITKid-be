@@ -191,4 +191,14 @@ export class UsersService implements IUsersService {
             console.error(error)
         }
     }
+
+    async getFundInRequests() {
+        try {
+            const requests = await this.historyRepository.find()
+
+            return requests
+        } catch (error) {
+            console.error(error)
+        }
+    }
 }

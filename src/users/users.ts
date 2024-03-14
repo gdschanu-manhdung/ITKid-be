@@ -1,3 +1,4 @@
+import { History } from 'src/database/typeorm/entities/History'
 import { User } from 'src/database/typeorm/entities/User'
 import { FundInDetails, UserDetails } from 'src/utils/types'
 import { FundInDto } from './dto/FundIn.dto'
@@ -12,4 +13,5 @@ export interface IUsersService {
     recoveryPassword(recoveryPasswordDto: RecoveryPasswordDto): Promise<User>
     fundIn(fundInDto: FundInDto): Promise<FundInDto>
     handlefundIn(fundInDetails: FundInDetails): Promise<FundInDto>
+    getFundInRequests(): Promise<History[]>
 }

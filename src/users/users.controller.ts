@@ -1,5 +1,6 @@
 import {
     Controller,
+    Get,
     HttpStatus,
     Inject,
     Post,
@@ -79,6 +80,13 @@ export class UsersController {
 
         return res.status(HttpStatus.OK).json({
             request: await this.usersService.handlefundIn(fundInDetails)
+        })
+    }
+
+    @Get('getFundInRequests')
+    async getFundInRequests(@Res() res: Response) {
+        return res.status(HttpStatus.OK).json({
+            requests: await this.usersService.getFundInRequests()
         })
     }
 }
