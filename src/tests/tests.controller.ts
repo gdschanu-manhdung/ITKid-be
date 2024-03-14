@@ -7,6 +7,7 @@ import {
     Res,
     Get
 } from '@nestjs/common'
+import { ApiQuery } from '@nestjs/swagger'
 import { Request, Response } from 'express'
 import { Routes, Services } from 'src/utils/constants'
 import { CourseDetails } from 'src/utils/types'
@@ -16,6 +17,7 @@ import { TestsService } from './tests.service'
 export class TestsController {
     constructor(@Inject(Services.TESTS) private testsService: TestsService) {}
 
+    @ApiQuery({ name: 'id', required: false, type: Number })
     @Post('createTest')
     async createTest(@Req() req: Request, @Res() res: Response) {
         const courseDetails = req.body as CourseDetails
@@ -25,6 +27,7 @@ export class TestsController {
         })
     }
 
+    @ApiQuery({ name: 'id', required: false, type: Number })
     @Get('getTestByCourse')
     async getTestByCourse(@Req() req: Request, @Res() res: Response) {
         const courseDetails = req.query as CourseDetails

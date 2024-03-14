@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger'
 
-export class AddQuiztestDto {
+export class QuiztwoDetailsDto {
     @ApiProperty()
-    testId: number
+    id: number
 
     @ApiProperty()
     question: string
@@ -14,11 +14,5 @@ export class AddQuiztestDto {
     answer_2: string
 
     @ApiProperty()
-    answer_3: string
-
-    @ApiProperty()
-    answer_4: string
-
-    @ApiProperty()
-    true_answer: number
+    true_answer: string
 }
