@@ -68,20 +68,20 @@ export class CoursesController {
     @ApiBody({ type: EditCourseDto })
     @Put('editCourse')
     async editCourse(@Req() req: Request, @Res() res: Response) {
-        const userDetails = req.body as UserDetails
+        const courseDetails = req.body as CourseDetails
 
         return res.status(HttpStatus.OK).json({
-            course: await this.coursesService.editCourse(userDetails)
+            course: await this.coursesService.editCourse(courseDetails)
         })
     }
 
     @ApiQuery({ name: 'id', required: true, type: Number })
     @Delete('deleteCourse')
     async deleteCourse(@Req() req: Request, @Res() res: Response) {
-        const userDetails = req.body as UserDetails
+        const courseDetails = req.body as CourseDetails
 
         return res.status(HttpStatus.OK).json({
-            message: await this.coursesService.deleteCourse(userDetails)
+            message: await this.coursesService.deleteCourse(courseDetails)
         })
     }
 }

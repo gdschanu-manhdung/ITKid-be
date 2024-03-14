@@ -2,7 +2,7 @@ import { HttpException, HttpStatus } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Course } from 'src/database/typeorm/entities/Course'
 import { Lesson } from 'src/database/typeorm/entities/Lesson'
-import { CourseDetails } from 'src/utils/types'
+import { CourseDetails, LessonDetails } from 'src/utils/types'
 import { Repository } from 'typeorm'
 import { AddLessonDto } from './dto/AddLesson.dto'
 import { ILessonsService } from './lessons'
@@ -54,6 +54,47 @@ export class LessonsService implements ILessonsService {
 
             const lesson = this.lessonRepository.create(lessonDetails)
             return await this.lessonRepository.save(lesson)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async editLesson(lessonDetails: LessonDetails) {
+        try {
+            const lesson = await this.lessonRepository.findOne({
+                where: { id: lessonDetails.id }
+            })
+
+            if (!lesson) {
+                throw new HttpException('Wrong lesson', HttpStatus.NOT_FOUND)
+            }
+
+            const { name } = lessonDetails
+
+            const editedLesson = {
+                ...lesson,
+                name
+            }
+
+            return await this.lessonRepository.save(editedLesson)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async deleteLesson(lessonDetails: LessonDetails) {
+        try {
+            const lesson = await this.lessonRepository.findOne({
+                where: { id: lessonDetails.id }
+            })
+
+            if (!lesson) {
+                throw new HttpException('Wrong lesson', HttpStatus.NOT_FOUND)
+            }
+
+            await this.lessonRepository.delete(lesson)
+
+            return 'Delete successfully'
         } catch (error) {
             console.error(error)
         }
