@@ -13,6 +13,7 @@ import { LessonsService } from './lessons.service'
 import { Request, Response } from 'express'
 import { AddLessonDto } from './dto/AddLesson.dto'
 import { ApiBody, ApiQuery } from '@nestjs/swagger'
+import { DoneLessonDto } from './dto/DoneLesson.dto'
 
 @Controller(Routes.LESSONS)
 export class LessonsController {
@@ -37,6 +38,16 @@ export class LessonsController {
 
         return res.status(HttpStatus.OK).json({
             lesson: await this.lessonsService.addLesson(addLessonDto)
+        })
+    }
+
+    @ApiBody({ type: DoneLessonDto })
+    @Post('doneCourse')
+    async doneCourse(@Req() req: Request, @Res() res: Response) {
+        const doneLessonDto = req.body as DoneLessonDto
+
+        return res.status(HttpStatus.OK).json({
+            message: await this.lessonsService.doneLesson(doneLessonDto)
         })
     }
 }
