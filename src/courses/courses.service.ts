@@ -6,13 +6,17 @@ import { HttpException, HttpStatus } from '@nestjs/common'
 import { Course } from 'src/database/typeorm/entities/Course'
 import { CategoryDetails } from 'src/utils/types'
 import { AddCourseDto } from './dto/AddCourse.dto'
+import { PayCourseDto } from './dto/PayCourse.dto'
+import { User } from 'src/database/typeorm/entities/User'
 
 export class CoursesService implements ICoursesService {
     constructor(
         @InjectRepository(Course)
         private readonly courseRepository: Repository<Course>,
         @InjectRepository(Category)
-        private readonly categoryRepository: Repository<Category>
+        private readonly categoryRepository: Repository<Category>,
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>
     ) {}
 
     async getCoursesByCategory(categoryDetails: CategoryDetails) {
@@ -56,6 +60,45 @@ export class CoursesService implements ICoursesService {
 
             const course = this.courseRepository.create(courseDetails)
             return await this.courseRepository.save(course)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async payCourse(paycourseDto: PayCourseDto) {
+        try {
+            const user = await this.userRepository.findOne({
+                where: { id: paycourseDto.userId }
+            })
+
+            if (!user) {
+                throw new HttpException('Wrong user', HttpStatus.NOT_FOUND)
+            }
+
+            const course = await this.courseRepository.findOne({
+                where: { id: paycourseDto.courseId }
+            })
+
+            if (!course) {
+                throw new HttpException('Wrong course', HttpStatus.NOT_FOUND)
+            }
+
+            if (course.fee > user.wallet) {
+                return 'Pay failed!'
+            }
+
+            const coursesLearning = user.coursesLearning
+                ? [...user.coursesLearning, course]
+                : [course]
+
+            const updatedUser = {
+                ...user,
+                wallet: user.wallet - course.fee,
+                coursesLearning
+            }
+
+            await this.userRepository.save(updatedUser)
+            return 'Pay successfully!'
         } catch (error) {
             console.error(error)
         }

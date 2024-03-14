@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger'
 
-export class RecoveryPasswordDto {
+export class PayCourseDto {
     @ApiProperty()
-    email: string
+    userId: number
 
     @ApiProperty()
-    password: string
+    courseId: number
 }
