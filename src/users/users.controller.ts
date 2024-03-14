@@ -12,6 +12,7 @@ import { Request, Response } from 'express'
 import { Routes, Services } from 'src/utils/constants'
 import { UserDetails } from 'src/utils/types'
 import { ChangePasswordDto } from './dto/ChangePassword.dto'
+import { FundInDto } from './dto/FundIn.dto'
 import { RecoveryPasswordDto } from './dto/RecoveryPassword.dto'
 import { RegisterDto } from './dto/Register.dto'
 import { UpdateUserDto } from './dto/UpdateUser.dto'
@@ -58,6 +59,16 @@ export class UsersController {
 
         return res.status(HttpStatus.OK).json({
             user: await this.usersService.recoveryPassword(recoveryPasswordDto)
+        })
+    }
+
+    @ApiBody({ type: FundInDto })
+    @Post('fundIn')
+    async fundIn(@Req() req: Request, @Res() res: Response) {
+        const fundInDto = req.body as FundInDto
+
+        return res.status(HttpStatus.OK).json({
+            request: await this.usersService.fundIn(fundInDto)
         })
     }
 }

@@ -3,6 +3,7 @@ import { ConfigService, ConfigModule } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { Category } from './typeorm/entities/Category'
 import { Course } from './typeorm/entities/Course'
+import { History } from './typeorm/entities/History'
 import { Knowledge } from './typeorm/entities/Knowledge'
 import { Lesson } from './typeorm/entities/Lesson'
 import { Quizlesson } from './typeorm/entities/Quizlesson'
@@ -29,7 +30,8 @@ import { User } from './typeorm/entities/User'
                     Quizlesson,
                     Quiztest,
                     Test,
-                    User
+                    User,
+                    History
                 ],
                 autoLoadEntities: true,
                 synchronize: true

@@ -8,11 +8,16 @@ import { RegisterDto } from './dto/Register.dto'
 import { compareHash, hashPassword } from 'src/utils/helper'
 import { ChangePasswordDto } from './dto/ChangePassword.dto'
 import { RecoveryPasswordDto } from './dto/RecoveryPassword.dto'
+import { FundInDto } from './dto/FundIn.dto'
+import { History } from 'src/database/typeorm/entities/History'
+import { FundInEnum } from 'src/utils/constants'
 
 export class UsersService implements IUsersService {
     constructor(
         @InjectRepository(User)
-        private readonly userRepository: Repository<User>
+        private readonly userRepository: Repository<User>,
+        @InjectRepository(History)
+        private readonly historyRepository: Repository<History>
     ) {}
 
     async findUserByEmail(userDetails: UserDetails) {
@@ -111,6 +116,34 @@ export class UsersService implements IUsersService {
             }
 
             return await this.userRepository.save(recoveryUser)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async fundIn(fundInDto: FundInDto) {
+        try {
+            const user = await this.userRepository.findOne({
+                where: { email: fundInDto.email }
+            })
+
+            if (!user) {
+                throw new HttpException('Wrong user', HttpStatus.UNAUTHORIZED)
+            }
+
+            if (fundInDto.amount <= 0) {
+                throw new HttpException(
+                    'Invalid amount',
+                    HttpStatus.NOT_ACCEPTABLE
+                )
+            }
+
+            const fundInDetails = {
+                ...fundInDto,
+                status: FundInEnum.PENDING
+            }
+            const fund = this.historyRepository.create(fundInDetails)
+            return await this.historyRepository.save(fund)
         } catch (error) {
             console.error(error)
         }
