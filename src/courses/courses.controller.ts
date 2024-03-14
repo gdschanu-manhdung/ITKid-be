@@ -13,6 +13,7 @@ import { CoursesService } from './courses.service'
 import { CourseDetails } from 'src/utils/types'
 import { AddCourseDto } from './dto/AddCourse.dto'
 import { ApiBody, ApiQuery } from '@nestjs/swagger'
+import { PayCourseDto } from './dto/PayCourse.dto'
 
 @Controller(Routes.COURSES)
 export class CoursesController {
@@ -38,6 +39,16 @@ export class CoursesController {
 
         return res.status(HttpStatus.OK).json({
             course: await this.coursesService.addCourse(addCourseDto)
+        })
+    }
+
+    @ApiBody({ type: PayCourseDto })
+    @Post('payCourse')
+    async payCourse(@Req() req: Request, @Res() res: Response) {
+        const paycourseDto = req.body as PayCourseDto
+
+        return res.status(HttpStatus.OK).json({
+            message: await this.coursesService.payCourse(paycourseDto)
         })
     }
 }
