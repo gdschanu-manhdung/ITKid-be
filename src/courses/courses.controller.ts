@@ -5,15 +5,18 @@ import {
     Inject,
     Req,
     Res,
-    Post
+    Post,
+    Put,
+    Delete
 } from '@nestjs/common'
 import { Routes, Services } from 'src/utils/constants'
 import { Request, Response } from 'express'
 import { CoursesService } from './courses.service'
-import { CourseDetails } from 'src/utils/types'
+import { CourseDetails, UserDetails } from 'src/utils/types'
 import { AddCourseDto } from './dto/AddCourse.dto'
 import { ApiBody, ApiQuery } from '@nestjs/swagger'
 import { PayCourseDto } from './dto/PayCourse.dto'
+import { EditCourseDto } from './dto/EditCourse.dto'
 
 @Controller(Routes.COURSES)
 export class CoursesController {
@@ -59,6 +62,26 @@ export class CoursesController {
 
         return res.status(HttpStatus.OK).json({
             message: await this.coursesService.doneCourse(paycourseDto)
+        })
+    }
+
+    @ApiBody({ type: EditCourseDto })
+    @Put('editCourse')
+    async editCourse(@Req() req: Request, @Res() res: Response) {
+        const userDetails = req.body as UserDetails
+
+        return res.status(HttpStatus.OK).json({
+            course: await this.coursesService.editCourse(userDetails)
+        })
+    }
+
+    @ApiQuery({ name: 'id', required: true, type: Number })
+    @Delete('deleteCourse')
+    async deleteCourse(@Req() req: Request, @Res() res: Response) {
+        const userDetails = req.body as UserDetails
+
+        return res.status(HttpStatus.OK).json({
+            message: await this.coursesService.deleteCourse(userDetails)
         })
     }
 }
