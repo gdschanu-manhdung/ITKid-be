@@ -5,7 +5,8 @@ import {
     ManyToMany,
     ManyToOne,
     OneToMany,
-    OneToOne
+    OneToOne,
+    JoinTable
 } from 'typeorm'
 import { Course } from './Course'
 import { Knowledge } from './Knowledge'
@@ -21,6 +22,7 @@ export class Lesson {
     name: string
 
     @ManyToMany(() => User, (user) => user.lessonsDone)
+    @JoinTable()
     usersDone: User[]
 
     @ManyToOne(() => Course, (course) => course.lessons)

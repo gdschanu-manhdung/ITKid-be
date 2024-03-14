@@ -201,4 +201,65 @@ export class UsersService implements IUsersService {
             console.error(error)
         }
     }
+
+    async increasePoint(userDetails: UserDetails) {
+        try {
+            const user = await this.userRepository.findOne({
+                where: { id: userDetails.id }
+            })
+
+            if (!user) {
+                throw new HttpException('Wrong index', HttpStatus.UNAUTHORIZED)
+            }
+
+            const updatedUser = {
+                ...user,
+                points: user.points + 10
+            }
+
+            return await this.userRepository.save(updatedUser)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async getUserRankings(userDetails: UserDetails) {
+        try {
+            const user = await this.userRepository.findOne({
+                where: { id: userDetails.id }
+            })
+
+            if (!user) {
+                throw new HttpException('Wrong index', HttpStatus.UNAUTHORIZED)
+            }
+
+            const userRankings = await this.userRepository.find({
+                order: {
+                    points: 'DESC'
+                }
+            })
+
+            const index = userRankings.findIndex(
+                (userRanking) => userRanking.id === user.id
+            )
+
+            return index + 1
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async getFullRankings() {
+        try {
+            const userRankings = await this.userRepository.find({
+                order: {
+                    points: 'DESC'
+                }
+            })
+
+            return userRankings
+        } catch (error) {
+            console.error(error)
+        }
+    }
 }

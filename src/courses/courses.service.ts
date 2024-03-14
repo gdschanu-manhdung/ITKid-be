@@ -103,4 +103,46 @@ export class CoursesService implements ICoursesService {
             console.error(error)
         }
     }
+
+    async doneCourse(paycourseDto: PayCourseDto) {
+        try {
+            const user = await this.userRepository.findOne({
+                where: { id: paycourseDto.userId }
+            })
+
+            if (!user) {
+                throw new HttpException('Wrong user', HttpStatus.NOT_FOUND)
+            }
+
+            const course = await this.courseRepository.findOne({
+                where: { id: paycourseDto.courseId }
+            })
+
+            if (!course) {
+                throw new HttpException('Wrong course', HttpStatus.NOT_FOUND)
+            }
+
+            if (user.coursesLearning && user.coursesLearning.includes(course)) {
+                const coursesLearning = user.coursesLearning.filter(
+                    (courseLearning) => courseLearning.id !== course.id
+                )
+                const coursesDone = user.coursesDone
+                    ? [...user.coursesDone, course]
+                    : [course]
+
+                const updatedUser = {
+                    ...user,
+                    wallet: user.wallet - course.fee,
+                    coursesLearning,
+                    coursesDone
+                }
+                await this.userRepository.save(updatedUser)
+                return 'Course done!'
+            } else {
+                throw new HttpException('Invalid Course', HttpStatus.NOT_FOUND)
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    }
 }
