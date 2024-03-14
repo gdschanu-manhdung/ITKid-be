@@ -15,6 +15,8 @@ import {
 import { Request, Response } from 'express'
 import { QuiztestDetails, TestDetails } from 'src/utils/types'
 import { AddQuiztestDto } from './dto/AddQuiztest.dto'
+import { ApiBody, ApiQuery } from '@nestjs/swagger'
+import { QuiztestDetailsDto } from './dto/QuiztestDetails.dto'
 
 @Controller(Routes.QUIZTESTS)
 export class QuiztestsController {
@@ -22,6 +24,7 @@ export class QuiztestsController {
         @Inject(Services.QUIZTESTS) private quiztestsService: QuiztestsService
     ) {}
 
+    @ApiQuery({ name: 'id', required: false, type: Number })
     @Get('getQuizzes')
     async getQuizzes(@Req() req: Request, @Res() res: Response) {
         const testDetails = req.query as TestDetails
@@ -33,6 +36,7 @@ export class QuiztestsController {
         })
     }
 
+    @ApiBody({ type: AddQuiztestDto })
     @Post('addQuiz')
     async addQuiz(@Req() req: Request, @Res() res: Response) {
         const addQuiztestDto = req.body as AddQuiztestDto
@@ -42,6 +46,7 @@ export class QuiztestsController {
         })
     }
 
+    @ApiBody({ type: QuiztestDetailsDto })
     @Put('editQuiz')
     async editQuiz(@Req() req: Request, @Res() res: Response) {
         const quiztestDetails = req.body as QuiztestDetails
@@ -51,6 +56,7 @@ export class QuiztestsController {
         })
     }
 
+    @ApiQuery({ name: 'id', required: false, type: Number })
     @Delete('deleteQuiz')
     async deleteQuiz(@Req() req: Request, @Res() res: Response) {
         const quiztestDetails = req.body as QuiztestDetails
