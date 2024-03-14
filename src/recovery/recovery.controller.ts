@@ -5,6 +5,7 @@ import { RecoveryService } from './recovery.service'
 import { Request, Response } from 'express'
 import { HttpStatus } from '@nestjs/common/enums'
 import { ConfirmRecoveryDto } from './dto/ConfirmRecovery.dto'
+import { ApiBody, ApiQuery } from '@nestjs/swagger'
 
 @Controller(Routes.RECOVERY)
 export class RecoveryController {
@@ -12,6 +13,7 @@ export class RecoveryController {
         @Inject(Services.RECOVERY) private recoveryService: RecoveryService
     ) {}
 
+    @ApiQuery({ name: 'email', required: false, type: String })
     @Post('recoveryAccount')
     async recoveryAccount(@Req() req: Request, @Res() res: Response) {
         const userDetails = req.body as UserDetails
@@ -21,6 +23,7 @@ export class RecoveryController {
         })
     }
 
+    @ApiBody({ type: ConfirmRecoveryDto })
     @Post('confirmRecovery')
     async confirmRecovery(@Req() req: Request, @Res() res: Response) {
         const confirmRecoveryDto = req.body as ConfirmRecoveryDto

@@ -12,6 +12,7 @@ import { Request, Response } from 'express'
 import { KnowledgesService } from './knowledges.service'
 import { LessonDetails } from 'src/utils/types'
 import { AddKnowledgeDto } from './dto/AddKnowledge.dto'
+import { ApiBody, ApiQuery } from '@nestjs/swagger'
 
 @Controller(Routes.KNOWLEDGES)
 export class KnowledgesController {
@@ -20,8 +21,9 @@ export class KnowledgesController {
         private knowledgesService: KnowledgesService
     ) {}
 
+    @ApiQuery({ name: 'id', required: false, type: Number })
     @Get('knowledgesByLesson')
-    async getCoursesByCategory(@Req() req: Request, @Res() res: Response) {
+    async getKnowledgesByLesson(@Req() req: Request, @Res() res: Response) {
         const lessonDetails = req.query as LessonDetails
 
         return res.status(HttpStatus.OK).json({
@@ -32,6 +34,7 @@ export class KnowledgesController {
         })
     }
 
+    @ApiBody({ type: AddKnowledgeDto })
     @Post('addKnowledge')
     async addKnowledge(@Req() req: Request, @Res() res: Response) {
         const addKnowledgeDto = req.body as AddKnowledgeDto

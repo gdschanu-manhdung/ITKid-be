@@ -12,6 +12,7 @@ import { Request, Response } from 'express'
 import { CoursesService } from './courses.service'
 import { CourseDetails } from 'src/utils/types'
 import { AddCourseDto } from './dto/AddCourse.dto'
+import { ApiBody, ApiQuery } from '@nestjs/swagger'
 
 @Controller(Routes.COURSES)
 export class CoursesController {
@@ -19,6 +20,7 @@ export class CoursesController {
         @Inject(Services.COURSES) private coursesService: CoursesService
     ) {}
 
+    @ApiQuery({ name: 'id', required: false, type: Number })
     @Get('coursesByCategory')
     async getCoursesByCategory(@Req() req: Request, @Res() res: Response) {
         const courseDetails = req.query as CourseDetails
@@ -29,6 +31,7 @@ export class CoursesController {
         })
     }
 
+    @ApiBody({ type: AddCourseDto })
     @Post('addCourse')
     async addCourse(@Req() req: Request, @Res() res: Response) {
         const addCourseDto = req.body as AddCourseDto
