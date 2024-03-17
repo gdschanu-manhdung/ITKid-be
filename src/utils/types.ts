@@ -22,6 +22,7 @@ export type CategoryDetails = {
     id?: number
     name?: string
     courses?: Course[]
+    access?: number
 }
 
 export type CourseDetails = {
