@@ -95,7 +95,6 @@ export class KnowledgesService implements IKnowledgesService {
             throw new HttpException('Wrong knowledge', HttpStatus.NOT_FOUND)
         }
 
-        // Xóa Knowledge
         await this.knowledgeRepository.remove(knowledge)
 
         return 'Delete successfully'
