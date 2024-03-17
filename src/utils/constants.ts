@@ -9,7 +9,8 @@ export enum Services {
     QUIZLESSONS = 'QUIZLESSONS_SERVICE',
     TESTS = 'TESTS_SERVICE',
     QUIZTESTS = 'QUIZTESTS_SERVICE',
-    QUIZTWOS = 'QUIZTWOS_SERVICE'
+    QUIZTWOS = 'QUIZTWOS_SERVICE',
+    SEARCH = 'SEARCH_SERVICE'
 }
 
 export enum Routes {
@@ -23,7 +24,8 @@ export enum Routes {
     QUIZLESSONS = 'quizlessons',
     TESTS = 'tests',
     QUIZTESTS = 'quiztests',
-    QUIZTWOS = 'quiztwos'
+    QUIZTWOS = 'quiztwos',
+    SEARCH = 'search'
 }
 
 export enum FundInEnum {

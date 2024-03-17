@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger'
 
-export class AddKnowledgeDto {
+export class EditKnowledgeDto {
     @ApiProperty()
-    lessonId: number
+    id: number
 
     @ApiProperty()
     name: string

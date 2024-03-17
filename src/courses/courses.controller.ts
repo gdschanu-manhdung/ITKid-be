@@ -84,4 +84,14 @@ export class CoursesController {
             message: await this.coursesService.deleteCourse(courseDetails)
         })
     }
+
+    @ApiQuery({ name: 'id', required: true, type: Number })
+    @Delete('updateAccess')
+    async updateAccess(@Req() req: Request, @Res() res: Response) {
+        const courseDetails = req.body as CourseDetails
+
+        return res.status(HttpStatus.OK).json({
+            message: await this.coursesService.updateAccess(courseDetails)
+        })
+    }
 }

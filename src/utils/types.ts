@@ -22,6 +22,7 @@ export type CategoryDetails = {
     id?: number
     name?: string
     courses?: Course[]
+    access?: number
 }
 
 export type CourseDetails = {
@@ -30,6 +31,7 @@ export type CourseDetails = {
     image?: string
     category?: Category
     fee?: number
+    access?: number
 }
 
 export type LessonDetails = {
@@ -81,4 +83,12 @@ export type FundInDetails = {
     email?: string
     amount?: string
     status?: string
+}
+
+export type KnowledgeDetails = {
+    id?: number
+    name?: string
+    description?: string
+    image?: string
+    lesson?: Lesson
 }

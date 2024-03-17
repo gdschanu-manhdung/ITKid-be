@@ -3,23 +3,23 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { Category } from 'src/database/typeorm/entities/Category'
 import { Course } from 'src/database/typeorm/entities/Course'
 import { Services } from 'src/utils/constants'
-import { CategoriesController } from './categories.controller'
-import { CategoriesService } from './categories.service'
+import { SearchController } from './search.controller'
+import { SearchService } from './search.service'
 
 @Module({
     imports: [TypeOrmModule.forFeature([Category, Course])],
-    controllers: [CategoriesController],
+    controllers: [SearchController],
     providers: [
         {
-            provide: Services.CATEGORIES,
-            useClass: CategoriesService
+            provide: Services.SEARCH,
+            useClass: SearchService
         }
     ],
     exports: [
         {
-            provide: Services.CATEGORIES,
-            useClass: CategoriesService
+            provide: Services.SEARCH,
+            useClass: SearchService
         }
     ]
 })
-export class CategoriesModule {}
+export class SearchModule {}

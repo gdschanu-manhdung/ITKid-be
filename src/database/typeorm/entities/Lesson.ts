@@ -21,6 +21,9 @@ export class Lesson {
     @Column()
     name: string
 
+    @Column()
+    isFree: boolean
+
     @ManyToMany(() => User, (user) => user.lessonsDone)
     @JoinTable()
     usersDone: User[]

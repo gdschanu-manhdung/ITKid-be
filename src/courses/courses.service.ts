@@ -8,6 +8,8 @@ import { CategoryDetails, CourseDetails } from 'src/utils/types'
 import { AddCourseDto } from './dto/AddCourse.dto'
 import { PayCourseDto } from './dto/PayCourse.dto'
 import { User } from 'src/database/typeorm/entities/User'
+import { Lesson } from 'src/database/typeorm/entities/Lesson'
+import { Test } from 'src/database/typeorm/entities/Test'
 
 export class CoursesService implements ICoursesService {
     constructor(
@@ -16,13 +18,18 @@ export class CoursesService implements ICoursesService {
         @InjectRepository(Category)
         private readonly categoryRepository: Repository<Category>,
         @InjectRepository(User)
-        private readonly userRepository: Repository<User>
+        private readonly userRepository: Repository<User>,
+        @InjectRepository(Lesson)
+        private readonly lessonRepository: Repository<Lesson>,
+        @InjectRepository(Test)
+        private readonly testRepository: Repository<Test>
     ) {}
 
     async getCoursesByCategory(categoryDetails: CategoryDetails) {
         try {
             const category = await this.categoryRepository.findOne({
-                where: { id: Number(categoryDetails.id) }
+                where: { id: Number(categoryDetails.id) },
+                order: { access: 'DESC' }
             })
 
             if (!category) {
@@ -55,7 +62,8 @@ export class CoursesService implements ICoursesService {
                 category,
                 name,
                 fee,
-                image
+                image,
+                access: 0
             }
 
             const course = this.courseRepository.create(courseDetails)
@@ -172,6 +180,33 @@ export class CoursesService implements ICoursesService {
     }
 
     async deleteCourse(courseDetails: CourseDetails) {
+        const course = await this.courseRepository.findOne({
+            where: { id: courseDetails.id },
+            relations: ['usersLearning', 'usersDone', 'lessons', 'test']
+        })
+
+        if (!course) {
+            throw new HttpException('Wrong course', HttpStatus.NOT_FOUND)
+        }
+
+        // Xóa các mối quan hệ ManyToMany
+        course.usersLearning = []
+        course.usersDone = []
+        await this.courseRepository.save(course)
+
+        // Xóa các Lesson liên quan
+        await this.lessonRepository.remove(course.lessons)
+
+        // Xóa Test liên quan
+        await this.testRepository.remove(course.test)
+
+        // Sau đó xóa Course
+        await this.courseRepository.remove(course)
+
+        return 'Delete successfully'
+    }
+
+    async updateAccess(courseDetails: CourseDetails) {
         try {
             const course = await this.courseRepository.findOne({
                 where: { id: courseDetails.id }
@@ -181,9 +216,12 @@ export class CoursesService implements ICoursesService {
                 throw new HttpException('Wrong course', HttpStatus.NOT_FOUND)
             }
 
-            await this.courseRepository.delete(course)
+            const updatedCourse = {
+                ...course,
+                access: course.access + 1
+            }
 
-            return 'Delete successfully'
+            return await this.courseRepository.save(updatedCourse)
         } catch (error) {
             console.error(error)
         }
