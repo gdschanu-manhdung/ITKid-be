@@ -10,8 +10,9 @@ import {
 import { Routes, Services } from 'src/utils/constants'
 import { CategoriesService } from './categories.service'
 import { Response, Request } from 'express'
-import { ApiBody } from '@nestjs/swagger'
+import { ApiBody, ApiQuery } from '@nestjs/swagger'
 import { AddCategoryDto } from './dto/AddCategory.dto'
+import { CategoryDetails } from 'src/utils/types'
 
 @Controller(Routes.CATEGORIES)
 export class CategoriesController {
@@ -34,6 +35,26 @@ export class CategoriesController {
 
         return res.status(HttpStatus.OK).json({
             category: await this.categoriesService.addCategory(addCategoryDto)
+        })
+    }
+
+    @ApiQuery({ name: 'id', required: true, type: Number })
+    @Post('updateAccess')
+    async updateAccess(@Req() req: Request, @Res() res: Response) {
+        const categoryDetails = req.body as CategoryDetails
+
+        return res.status(HttpStatus.OK).json({
+            category: await this.categoriesService.updateAccess(categoryDetails)
+        })
+    }
+
+    @ApiQuery({ name: 'id', required: true, type: Number })
+    @Post('deleteCategory')
+    async deleteCategory(@Req() req: Request, @Res() res: Response) {
+        const categoryDetails = req.body as CategoryDetails
+
+        return res.status(HttpStatus.OK).json({
+            category: await this.categoriesService.updateAccess(categoryDetails)
         })
     }
 }
