@@ -2,9 +2,10 @@ import { HttpException, HttpStatus } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Knowledge } from 'src/database/typeorm/entities/Knowledge'
 import { Lesson } from 'src/database/typeorm/entities/Lesson'
-import { LessonDetails } from 'src/utils/types'
+import { KnowledgeDetails, LessonDetails } from 'src/utils/types'
 import { Repository } from 'typeorm'
 import { AddKnowledgeDto } from './dto/AddKnowledge.dto'
+import { EditKnowledgeDto } from './dto/EditKnowledge.dto'
 import { IKnowledgesService } from './knowledges'
 
 export class KnowledgesService implements IKnowledgesService {
@@ -58,5 +59,45 @@ export class KnowledgesService implements IKnowledgesService {
         } catch (error) {
             console.error(error)
         }
+    }
+
+    async editKnowledge(editKnowledgeDto: EditKnowledgeDto) {
+        try {
+            const knowledge = await this.knowledgeRepository.findOne({
+                where: { id: editKnowledgeDto.id }
+            })
+
+            if (!knowledge) {
+                throw new HttpException('Wrong knowledge', HttpStatus.NOT_FOUND)
+            }
+
+            const { name, description, image } = editKnowledgeDto
+
+            const updatedKnowledge = {
+                ...knowledge,
+                name,
+                description,
+                image
+            }
+
+            return await this.knowledgeRepository.save(updatedKnowledge)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async deleteKnowledge(knowledgeDetails: KnowledgeDetails) {
+        const knowledge = await this.knowledgeRepository.findOne({
+            where: { id: knowledgeDetails.id }
+        })
+
+        if (!knowledge) {
+            throw new HttpException('Wrong knowledge', HttpStatus.NOT_FOUND)
+        }
+
+        // Xóa Knowledge
+        await this.knowledgeRepository.remove(knowledge)
+
+        return 'Delete successfully'
     }
 }

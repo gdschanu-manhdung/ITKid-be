@@ -84,3 +84,11 @@ export type FundInDetails = {
     amount?: string
     status?: string
 }
+
+export type KnowledgeDetails = {
+    id?: number
+    name?: string
+    description?: string
+    image?: string
+    lesson?: Lesson
+}
