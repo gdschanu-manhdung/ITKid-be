@@ -22,7 +22,8 @@ export class CoursesService implements ICoursesService {
     async getCoursesByCategory(categoryDetails: CategoryDetails) {
         try {
             const category = await this.categoryRepository.findOne({
-                where: { id: Number(categoryDetails.id) }
+                where: { id: Number(categoryDetails.id) },
+                order: { access: 'DESC' }
             })
 
             if (!category) {
@@ -55,7 +56,8 @@ export class CoursesService implements ICoursesService {
                 category,
                 name,
                 fee,
-                image
+                image,
+                access: 0
             }
 
             const course = this.courseRepository.create(courseDetails)
@@ -184,6 +186,27 @@ export class CoursesService implements ICoursesService {
             await this.courseRepository.delete(course)
 
             return 'Delete successfully'
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async updateAccess(courseDetails: CourseDetails) {
+        try {
+            const course = await this.courseRepository.findOne({
+                where: { id: courseDetails.id }
+            })
+
+            if (!course) {
+                throw new HttpException('Wrong course', HttpStatus.NOT_FOUND)
+            }
+
+            const updatedCourse = {
+                ...course,
+                access: course.access + 1
+            }
+
+            return await this.courseRepository.save(updatedCourse)
         } catch (error) {
             console.error(error)
         }

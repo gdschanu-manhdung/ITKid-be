@@ -9,6 +9,9 @@ export class Category {
     @Column()
     name: string
 
+    @Column()
+    access: number
+
     @OneToMany(() => Course, (course) => course.category, { cascade: true })
     courses: Course[]
 }

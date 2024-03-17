@@ -10,4 +10,5 @@ export interface ICoursesService {
     doneCourse(paycourseDto: PayCourseDto): Promise<string>
     editCourse(courseDetails: CourseDetails): Promise<Course>
     deleteCourse(courseDetails: CourseDetails): Promise<string>
+    updateAccess(courseDetails: CourseDetails): Promise<Course>
 }
