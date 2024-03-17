@@ -12,6 +12,9 @@ export class Knowledge {
     @Column()
     description: string
 
+    @Column()
+    image: string
+
     @ManyToOne(() => Lesson, (lesson) => lesson.knowledges, { cascade: true })
     lesson: Lesson
 }

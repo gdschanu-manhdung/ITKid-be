@@ -5,7 +5,8 @@ import {
     Inject,
     Post,
     Req,
-    Res
+    Res,
+    Delete
 } from '@nestjs/common'
 import { Routes, Services } from 'src/utils/constants'
 import { CategoriesService } from './categories.service'
@@ -49,7 +50,7 @@ export class CategoriesController {
     }
 
     @ApiQuery({ name: 'id', required: true, type: Number })
-    @Post('deleteCategory')
+    @Delete('deleteCategory')
     async deleteCategory(@Req() req: Request, @Res() res: Response) {
         const categoryDetails = req.body as CategoryDetails
 

@@ -8,6 +8,8 @@ import { Repository } from 'typeorm'
 import { AddLessonDto } from './dto/AddLesson.dto'
 import { DoneLessonDto } from './dto/DoneLesson.dto'
 import { ILessonsService } from './lessons'
+import { Knowledge } from 'src/database/typeorm/entities/Knowledge'
+import { Quizlesson } from 'src/database/typeorm/entities/Quizlesson'
 
 export class LessonsService implements ILessonsService {
     constructor(
@@ -16,7 +18,11 @@ export class LessonsService implements ILessonsService {
         @InjectRepository(Lesson)
         private readonly lessonRepository: Repository<Lesson>,
         @InjectRepository(User)
-        private readonly userRepository: Repository<User>
+        private readonly userRepository: Repository<User>,
+        @InjectRepository(Knowledge)
+        private readonly knowledgeRepository: Repository<Knowledge>,
+        @InjectRepository(Quizlesson)
+        private readonly quizlessonRepository: Repository<Quizlesson>
     ) {}
 
     async getLessonsByCourse(courseDetails: CourseDetails) {
@@ -87,22 +93,27 @@ export class LessonsService implements ILessonsService {
     }
 
     async deleteLesson(lessonDetails: LessonDetails) {
-        try {
-            const lesson = await this.lessonRepository.findOne({
-                where: { id: lessonDetails.id }
-            })
+        const lesson = await this.lessonRepository.findOne({
+            where: { id: lessonDetails.id },
+            relations: ['usersDone', 'knowledges', 'quizlesson']
+        })
 
-            if (!lesson) {
-                throw new HttpException('Wrong lesson', HttpStatus.NOT_FOUND)
-            }
-
-            await this.lessonRepository.delete(lesson)
-
-            return 'Delete successfully'
-        } catch (error) {
-            console.error(error)
+        if (!lesson) {
+            throw new HttpException('Wrong lesson', HttpStatus.NOT_FOUND)
         }
+
+        lesson.usersDone = []
+        await this.lessonRepository.save(lesson)
+
+        await this.knowledgeRepository.remove(lesson.knowledges)
+
+        await this.quizlessonRepository.remove(lesson.quizlesson)
+
+        await this.lessonRepository.remove(lesson)
+
+        return 'Delete successfully'
     }
+
     async doneLesson(doneLessonDto: DoneLessonDto) {
         try {
             const user = await this.userRepository.findOne({
