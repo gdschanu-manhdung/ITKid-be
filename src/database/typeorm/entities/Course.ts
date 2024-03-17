@@ -27,6 +27,9 @@ export class Course {
     @Column()
     image: string
 
+    @Column()
+    access: number
+
     @ManyToMany(() => User, (user) => user.coursesLearning, { cascade: true })
     @JoinTable()
     usersLearning: User[]

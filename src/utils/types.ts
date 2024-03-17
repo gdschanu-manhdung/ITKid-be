@@ -30,6 +30,7 @@ export type CourseDetails = {
     image?: string
     category?: Category
     fee?: number
+    access?: number
 }
 
 export type LessonDetails = {
