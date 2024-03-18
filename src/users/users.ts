@@ -11,7 +11,7 @@ export interface IUsersService {
     updateUser(userDetails: UserDetails): Promise<User>
     changePassword(userDetails: UserDetails): Promise<User>
     recoveryPassword(recoveryPasswordDto: RecoveryPasswordDto): Promise<User>
-    fundIn(fundInDto: FundInDto): Promise<FundInDto>
+    requestFundIn(fundInDto: FundInDto): Promise<FundInDto>
     handlefundIn(fundInDetails: FundInDetails): Promise<FundInDto>
     getFundInRequests(): Promise<History[]>
     increasePoint(userDetails: UserDetails): Promise<User>

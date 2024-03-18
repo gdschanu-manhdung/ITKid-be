@@ -69,7 +69,7 @@ export class UsersController {
         const fundInDto = req.body as FundInDto
 
         return res.status(HttpStatus.OK).json({
-            request: await this.usersService.fundIn(fundInDto)
+            request: await this.usersService.requestFundIn(fundInDto)
         })
     }
 
