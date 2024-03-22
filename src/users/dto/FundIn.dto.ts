@@ -6,4 +6,7 @@ export class FundInDto {
 
     @ApiProperty()
     amount: number
+
+    @ApiProperty()
+    code: string
 }

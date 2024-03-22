@@ -4,7 +4,7 @@ import { Services } from 'src/utils/constants'
 import { UserDetails } from 'src/utils/types'
 import { IRecoveryService } from './recovery'
 import { MailerService } from '@nestjs-modules/mailer'
-import { randomRecoveryCode } from 'src/utils/helper'
+import { bigIntTime, randomRecoveryCode } from 'src/utils/helper'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Recovery } from 'src/database/typeorm/entities/Recovery'
 import { Repository } from 'typeorm'
@@ -47,7 +47,7 @@ export class RecoveryService implements IRecoveryService {
                 const recovery = this.recoveryRepository.create({
                     user,
                     recoveryCode,
-                    generatedTime: Math.floor(Date.now() / 1000)
+                    generatedTime: bigIntTime()
                 })
 
                 await this.recoveryRepository.save(recovery)
@@ -55,7 +55,7 @@ export class RecoveryService implements IRecoveryService {
                 const recovery = {
                     ...existingRecovery,
                     recoveryCode,
-                    generatedTime: Math.floor(Date.now() / 1000)
+                    generatedTime: bigIntTime()
                 }
                 await this.recoveryRepository.save(recovery)
             }

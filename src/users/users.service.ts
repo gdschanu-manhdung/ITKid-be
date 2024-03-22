@@ -1,16 +1,22 @@
 import { InjectRepository } from '@nestjs/typeorm'
 import { User } from 'src/database/typeorm/entities/User'
 import { FundInDetails, UserDetails } from 'src/utils/types'
-import { Repository } from 'typeorm'
+import { Like, Repository } from 'typeorm'
 import { IUsersService } from './users'
 import { HttpException, HttpStatus } from '@nestjs/common'
 import { RegisterDto } from './dto/Register.dto'
-import { compareHash, hashPassword } from 'src/utils/helper'
+import {
+    bigIntTime,
+    compareHash,
+    generateRandomFundInCode,
+    hashPassword
+} from 'src/utils/helper'
 import { ChangePasswordDto } from './dto/ChangePassword.dto'
 import { RecoveryPasswordDto } from './dto/RecoveryPassword.dto'
 import { FundInDto } from './dto/FundIn.dto'
 import { History } from 'src/database/typeorm/entities/History'
 import { FundInEnum } from 'src/utils/constants'
+import { SearchQueryDto } from './dto/SearchQuery.dto'
 
 export class UsersService implements IUsersService {
     constructor(
@@ -121,7 +127,7 @@ export class UsersService implements IUsersService {
         }
     }
 
-    async fundIn(fundInDto: FundInDto) {
+    async requestFundIn(fundInDto: FundInDto) {
         try {
             const user = await this.userRepository.findOne({
                 where: { email: fundInDto.email }
@@ -140,7 +146,9 @@ export class UsersService implements IUsersService {
 
             const fundInDetails = {
                 ...fundInDto,
-                status: FundInEnum.PENDING
+                status: FundInEnum.PENDING,
+                createdAt: bigIntTime(),
+                code: generateRandomFundInCode()
             }
             const fund = this.historyRepository.create(fundInDetails)
             return await this.historyRepository.save(fund)
@@ -151,41 +159,34 @@ export class UsersService implements IUsersService {
 
     async handlefundIn(fundInDetails: FundInDetails) {
         try {
-            if (!fundInDetails.id) {
-                throw new HttpException('Wrong index', HttpStatus.BAD_REQUEST)
-            }
-
             const fundRequest = await this.historyRepository.findOne({
-                where: { id: fundInDetails.id }
+                where: { email: fundInDetails.email }
             })
 
             if (!fundRequest) {
-                throw new HttpException('Invalid request', HttpStatus.NOT_FOUND)
+                throw new HttpException(
+                    'Invalid fund request',
+                    HttpStatus.NOT_FOUND
+                )
             }
 
-            const user = await this.userRepository.findOne({
-                where: { email: fundRequest.email }
-            })
-
-            if (!user) {
-                const fund = {
-                    ...fundRequest,
-                    status: FundInEnum.FAILED
-                }
-
-                return await this.historyRepository.save(fund)
-            } else {
-                const fund = {
+            if (
+                fundInDetails.code === fundRequest.code &&
+                (bigIntTime() - fundRequest.createdAt) / 1000 <= 10 * 60
+            ) {
+                const updatedRequest = {
                     ...fundRequest,
                     status: FundInEnum.SUCCESS
                 }
 
-                const updatedUser = {
-                    ...user,
-                    wallet: user.wallet + fund.amount / 100
+                return await this.historyRepository.save(updatedRequest)
+            } else {
+                const updatedRequest = {
+                    ...fundRequest,
+                    status: FundInEnum.FAILED
                 }
-                await this.userRepository.save(updatedUser)
-                return await this.historyRepository.save(fund)
+
+                return await this.historyRepository.save(updatedRequest)
             }
         } catch (error) {
             console.error(error)
@@ -258,6 +259,43 @@ export class UsersService implements IUsersService {
             })
 
             return userRankings
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async getUsers() {
+        try {
+            return await this.userRepository.find()
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async getUserById(userDetails: UserDetails) {
+        try {
+            const user = await this.userRepository.findOne({
+                where: { id: userDetails.id }
+            })
+
+            return user
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async getUsersByString(searchQueryDto: SearchQueryDto) {
+        try {
+            const searchQuery = searchQueryDto.searchQuery as string
+
+            const users = await this.userRepository.find({
+                where: [
+                    { email: Like(`%${searchQuery}%`) },
+                    { name: Like(`%${searchQuery}%`) }
+                ]
+            })
+
+            return users
         } catch (error) {
             console.error(error)
         }

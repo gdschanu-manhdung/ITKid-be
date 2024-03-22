@@ -83,6 +83,8 @@ export type FundInDetails = {
     email?: string
     amount?: string
     status?: string
+    code?: string
+    createdAt?: number
 }
 
 export type KnowledgeDetails = {
