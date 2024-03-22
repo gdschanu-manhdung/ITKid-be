@@ -27,3 +27,19 @@ export function getRandomElements<T>(arr: T[], count: number): T[] {
     }
     return shuffled.slice(0, count)
 }
+
+export function bigIntTime() {
+    return Math.floor(Date.now() / 1000)
+}
+
+export function generateRandomFundInCode() {
+    let date = Date.now()
+    let random = ''
+    for (let i = 0; i < 8; i++) {
+        date += Math.floor(Math.random() * 10)
+        random += (
+            '0' + ((Math.abs(Math.sin(date)) * 10000) % 10).toFixed(0)
+        ).slice(-1)
+    }
+    return random
+}

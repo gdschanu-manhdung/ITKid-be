@@ -12,6 +12,12 @@ export class History {
     @Column()
     amount: number
 
+    @Column({ type: 'bigint' })
+    createdAt: number
+
+    @Column()
+    code: string
+
     @Column({ type: 'enum', enum: FundInEnum })
     status: string
 }
