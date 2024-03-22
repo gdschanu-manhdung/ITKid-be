@@ -16,6 +16,7 @@ import { ChangePasswordDto } from './dto/ChangePassword.dto'
 import { FundInDto } from './dto/FundIn.dto'
 import { RecoveryPasswordDto } from './dto/RecoveryPassword.dto'
 import { RegisterDto } from './dto/Register.dto'
+import { SearchQueryDto } from './dto/SearchQuery.dto'
 import { UpdateUserDto } from './dto/UpdateUser.dto'
 import { UsersService } from './users.service'
 
@@ -108,6 +109,33 @@ export class UsersController {
         return res.status(HttpStatus.OK).json({
             rankings: await this.usersService.getUserRankings(userDetails),
             fullRankings: await this.usersService.getFullRankings()
+        })
+    }
+
+    @Get('getUsers')
+    async getUsers(@Res() res: Response) {
+        return res.status(HttpStatus.OK).json({
+            users: await this.usersService.getUsers()
+        })
+    }
+
+    @Get('getUserById')
+    @ApiQuery({ name: 'id', required: true, type: Number })
+    async getUserById(@Req() req: Request, @Res() res: Response) {
+        const userDetails = req.query as UserDetails
+
+        return res.status(HttpStatus.OK).json({
+            user: await this.usersService.getUserById(userDetails)
+        })
+    }
+
+    @Get('getUsersByString')
+    @ApiQuery({ name: 'searchQuery', required: true, type: String })
+    async getUsersByString(@Req() req: Request, @Res() res: Response) {
+        const searchQueryDto = req.query as SearchQueryDto
+
+        return res.status(HttpStatus.OK).json({
+            users: await this.usersService.getUsersByString(searchQueryDto)
         })
     }
 }

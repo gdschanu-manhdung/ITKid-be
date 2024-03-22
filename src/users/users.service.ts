@@ -1,7 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm'
 import { User } from 'src/database/typeorm/entities/User'
 import { FundInDetails, UserDetails } from 'src/utils/types'
-import { Repository } from 'typeorm'
+import { Like, Repository } from 'typeorm'
 import { IUsersService } from './users'
 import { HttpException, HttpStatus } from '@nestjs/common'
 import { RegisterDto } from './dto/Register.dto'
@@ -16,6 +16,7 @@ import { RecoveryPasswordDto } from './dto/RecoveryPassword.dto'
 import { FundInDto } from './dto/FundIn.dto'
 import { History } from 'src/database/typeorm/entities/History'
 import { FundInEnum } from 'src/utils/constants'
+import { SearchQueryDto } from './dto/SearchQuery.dto'
 
 export class UsersService implements IUsersService {
     constructor(
@@ -258,6 +259,43 @@ export class UsersService implements IUsersService {
             })
 
             return userRankings
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async getUsers() {
+        try {
+            return await this.userRepository.find()
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async getUserById(userDetails: UserDetails) {
+        try {
+            const user = await this.userRepository.findOne({
+                where: { id: userDetails.id }
+            })
+
+            return user
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async getUsersByString(searchQueryDto: SearchQueryDto) {
+        try {
+            const searchQuery = searchQueryDto.searchQuery as string
+
+            const users = await this.userRepository.find({
+                where: [
+                    { email: Like(`%${searchQuery}%`) },
+                    { name: Like(`%${searchQuery}%`) }
+                ]
+            })
+
+            return users
         } catch (error) {
             console.error(error)
         }

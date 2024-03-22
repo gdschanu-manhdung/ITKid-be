@@ -4,6 +4,7 @@ import { FundInDetails, UserDetails } from 'src/utils/types'
 import { FundInDto } from './dto/FundIn.dto'
 import { RecoveryPasswordDto } from './dto/RecoveryPassword.dto'
 import { RegisterDto } from './dto/Register.dto'
+import { SearchQueryDto } from './dto/SearchQuery.dto'
 
 export interface IUsersService {
     findUserByEmail(userDetails: UserDetails): Promise<User>
@@ -17,4 +18,7 @@ export interface IUsersService {
     increasePoint(userDetails: UserDetails): Promise<User>
     getUserRankings(userDetails: UserDetails): Promise<number>
     getFullRankings(): Promise<User[]>
+    getUsers(): Promise<User[]>
+    getUserById(userDetails: UserDetails): Promise<User>
+    getUsersByString(searchQueryDto: SearchQueryDto): Promise<User[]>
 }
