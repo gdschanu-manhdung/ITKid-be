@@ -17,6 +17,7 @@ import { FundInDto } from './dto/FundIn.dto'
 import { History } from 'src/database/typeorm/entities/History'
 import { FundInEnum } from 'src/utils/constants'
 import { SearchQueryDto } from './dto/SearchQuery.dto'
+import { UpdateUserDto } from './dto/UpdateUser.dto'
 
 export class UsersService implements IUsersService {
     constructor(
@@ -66,7 +67,9 @@ export class UsersService implements IUsersService {
 
     async updateUser(userDetails: UserDetails) {
         try {
-            const user = await this.findUserByEmail(userDetails)
+            const user = await this.userRepository.findOne({
+                where: { id: userDetails.id }
+            })
 
             const editedUser = {
                 ...user,
@@ -74,6 +77,8 @@ export class UsersService implements IUsersService {
                 dob: userDetails.dob,
                 phone: userDetails.phone
             }
+
+            console.log(userDetails, user)
 
             return await this.userRepository.save(editedUser)
         } catch (error) {
