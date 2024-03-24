@@ -37,10 +37,10 @@ export class UsersController {
     @ApiBody({ type: UpdateUserDto })
     @Put('updateUser')
     async updateUser(@Req() req: Request, @Res() res: Response) {
-        const userDetails = req.body as UserDetails
+        const updateUserDto = req.body as UpdateUserDto
 
         return res.status(HttpStatus.OK).json({
-            user: await this.usersService.updateUser(userDetails)
+            user: await this.usersService.updateUser(updateUserDto)
         })
     }
 

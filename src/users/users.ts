@@ -5,11 +5,12 @@ import { FundInDto } from './dto/FundIn.dto'
 import { RecoveryPasswordDto } from './dto/RecoveryPassword.dto'
 import { RegisterDto } from './dto/Register.dto'
 import { SearchQueryDto } from './dto/SearchQuery.dto'
+import { UpdateUserDto } from './dto/UpdateUser.dto'
 
 export interface IUsersService {
     findUserByEmail(userDetails: UserDetails): Promise<User>
     createUser(registerDto: RegisterDto): Promise<User>
-    updateUser(userDetails: UserDetails): Promise<User>
+    updateUser(updateUserDto: UpdateUserDto): Promise<User>
     changePassword(userDetails: UserDetails): Promise<User>
     recoveryPassword(recoveryPasswordDto: RecoveryPasswordDto): Promise<User>
     requestFundIn(fundInDto: FundInDto): Promise<FundInDto>
