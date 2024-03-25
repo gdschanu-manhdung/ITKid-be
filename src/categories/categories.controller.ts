@@ -14,6 +14,7 @@ import { Response, Request } from 'express'
 import { ApiBody, ApiQuery } from '@nestjs/swagger'
 import { AddCategoryDto } from './dto/AddCategory.dto'
 import { CategoryDetails } from 'src/utils/types'
+import { SearchCategoryDto } from './dto/SearchCategory.dto'
 
 @Controller(Routes.CATEGORIES)
 export class CategoriesController {
@@ -55,7 +56,21 @@ export class CategoriesController {
         const categoryDetails = req.body as CategoryDetails
 
         return res.status(HttpStatus.OK).json({
-            category: await this.categoriesService.updateAccess(categoryDetails)
+            category:
+                await this.categoriesService.deleteCategory(categoryDetails)
+        })
+    }
+
+    @ApiQuery({ name: 'searchQuery', required: true, type: String })
+    @Get('getCategoriesByString')
+    async getCategoriesByString(@Req() req: Request, @Res() res: Response) {
+        const searchCategoryDto = req.query as SearchCategoryDto
+
+        return res.status(HttpStatus.OK).json({
+            categories:
+                await this.categoriesService.getCategoriesByString(
+                    searchCategoryDto
+                )
         })
     }
 }
