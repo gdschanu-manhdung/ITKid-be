@@ -3,10 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Category } from 'src/database/typeorm/entities/Category'
 import { Course } from 'src/database/typeorm/entities/Course'
 import { CategoryDetails } from 'src/utils/types'
-import { Repository } from 'typeorm'
+import { Like, Repository } from 'typeorm'
 import { ICategoriesService } from './categories'
 import { AddCategoryDto } from './dto/AddCategory.dto'
 import { EditCategoryDto } from './dto/EditCategory.dto'
+import { SearchCategoryDto } from './dto/SearchCategory.dto'
 
 export class CategoriesService implements ICategoriesService {
     constructor(
@@ -100,11 +101,23 @@ export class CategoriesService implements ICategoriesService {
                 throw new HttpException('Wrong category', HttpStatus.NOT_FOUND)
             }
 
-            await this.courseRepository.remove(category.courses)
+            // await this.courseRepository.remove(category.courses)
 
             await this.categoryRepository.remove(category)
 
             return 'Delete successfully!'
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async getCategoriesByString(searchCategoryDto: SearchCategoryDto) {
+        try {
+            const categories = await this.categoryRepository.find({
+                where: { name: Like(`%${searchCategoryDto.searchQuery}%`) }
+            })
+
+            return categories
         } catch (error) {
             console.error(error)
         }
