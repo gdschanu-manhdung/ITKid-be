@@ -122,4 +122,16 @@ export class CategoriesService implements ICategoriesService {
             console.error(error)
         }
     }
+
+    async getCategoryById(categoryDetails: CategoryDetails) {
+        try {
+            const category = await this.categoryRepository.findOne({
+                where: { id: categoryDetails.id }
+            })
+
+            return category
+        } catch (error) {
+            console.error(error)
+        }
+    }
 }

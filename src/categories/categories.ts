@@ -13,4 +13,5 @@ export interface ICategoriesService {
     getCategoriesByString(
         searchCategoryDto: SearchCategoryDto
     ): Promise<Category[]>
+    getCategoryById(categoryDetails: CategoryDetails): Promise<Category>
 }
