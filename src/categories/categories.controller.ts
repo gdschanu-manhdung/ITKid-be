@@ -6,7 +6,8 @@ import {
     Post,
     Req,
     Res,
-    Delete
+    Delete,
+    Put
 } from '@nestjs/common'
 import { Routes, Services } from 'src/utils/constants'
 import { CategoriesService } from './categories.service'
@@ -15,6 +16,7 @@ import { ApiBody, ApiQuery } from '@nestjs/swagger'
 import { AddCategoryDto } from './dto/AddCategory.dto'
 import { CategoryDetails } from 'src/utils/types'
 import { SearchCategoryDto } from './dto/SearchCategory.dto'
+import { EditCategoryDto } from './dto/EditCategory.dto'
 
 @Controller(Routes.CATEGORIES)
 export class CategoriesController {
@@ -71,6 +73,27 @@ export class CategoriesController {
                 await this.categoriesService.getCategoriesByString(
                     searchCategoryDto
                 )
+        })
+    }
+
+    @ApiQuery({ name: 'id', required: true, type: Number })
+    @Get('getCategoryById')
+    async getCategoryById(@Req() req: Request, @Res() res: Response) {
+        const categoryDetails = req.query as CategoryDetails
+
+        return res.status(HttpStatus.OK).json({
+            category:
+                await this.categoriesService.getCategoryById(categoryDetails)
+        })
+    }
+
+    @ApiBody({ type: EditCategoryDto })
+    @Put('updateCategory')
+    async updateCategory(@Req() req: Request, @Res() res: Response) {
+        const editCategoryDto = req.body as EditCategoryDto
+
+        return res.status(HttpStatus.OK).json({
+            category: await this.categoriesService.editCategory(editCategoryDto)
         })
     }
 }
