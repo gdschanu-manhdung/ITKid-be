@@ -17,6 +17,7 @@ import { AddCourseDto } from './dto/AddCourse.dto'
 import { ApiBody, ApiQuery } from '@nestjs/swagger'
 import { PayCourseDto } from './dto/PayCourse.dto'
 import { EditCourseDto } from './dto/EditCourse.dto'
+import { SearchCourseDto } from './dto/SearchCourse.dto'
 
 @Controller(Routes.COURSES)
 export class CoursesController {
@@ -92,6 +93,17 @@ export class CoursesController {
 
         return res.status(HttpStatus.OK).json({
             message: await this.coursesService.updateAccess(courseDetails)
+        })
+    }
+
+    @ApiQuery({ name: 'searchQuery', required: true, type: String })
+    @Get('getCoursesByString')
+    async getCoursesByString(@Req() req: Request, @Res() res: Response) {
+        const searchCourseDto = req.query as SearchCourseDto
+
+        return res.status(HttpStatus.OK).json({
+            courses:
+                await this.coursesService.getCoursesByString(searchCourseDto)
         })
     }
 }

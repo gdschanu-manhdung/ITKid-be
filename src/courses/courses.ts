@@ -2,6 +2,7 @@ import { Course } from 'src/database/typeorm/entities/Course'
 import { CategoryDetails, CourseDetails } from 'src/utils/types'
 import { AddCourseDto } from './dto/AddCourse.dto'
 import { PayCourseDto } from './dto/PayCourse.dto'
+import { SearchCourseDto } from './dto/SearchCourse.dto'
 
 export interface ICoursesService {
     getCoursesByCategory(categoryDetails: CategoryDetails): Promise<Course[]>
@@ -11,4 +12,5 @@ export interface ICoursesService {
     editCourse(courseDetails: CourseDetails): Promise<Course>
     deleteCourse(courseDetails: CourseDetails): Promise<string>
     updateAccess(courseDetails: CourseDetails): Promise<Course>
+    getCoursesByString(searchCourseDto: SearchCourseDto): Promise<Course[]>
 }
