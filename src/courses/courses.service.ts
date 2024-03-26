@@ -1,6 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm'
 import { Category } from 'src/database/typeorm/entities/Category'
-import { Repository } from 'typeorm'
+import { Like, Repository } from 'typeorm'
 import { ICoursesService } from './courses'
 import { HttpException, HttpStatus } from '@nestjs/common'
 import { Course } from 'src/database/typeorm/entities/Course'
@@ -10,6 +10,8 @@ import { PayCourseDto } from './dto/PayCourse.dto'
 import { User } from 'src/database/typeorm/entities/User'
 import { Lesson } from 'src/database/typeorm/entities/Lesson'
 import { Test } from 'src/database/typeorm/entities/Test'
+import { SearchCategoryDto } from 'src/categories/dto/SearchCategory.dto'
+import { SearchCourseDto } from './dto/SearchCourse.dto'
 
 export class CoursesService implements ICoursesService {
     constructor(
@@ -222,6 +224,18 @@ export class CoursesService implements ICoursesService {
             }
 
             return await this.courseRepository.save(updatedCourse)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async getCoursesByString(searchCourseDto: SearchCourseDto) {
+        try {
+            const courses = await this.courseRepository.find({
+                where: { name: Like(`%${searchCourseDto.searchQuery}%`) }
+            })
+
+            return courses
         } catch (error) {
             console.error(error)
         }
